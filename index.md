@@ -63,10 +63,10 @@ permalink: /
 {:style="float: right; padding: 30px; max-width: 30%; min-width: 330px;"}
 
 <br/>
-Hi! I'm a 3rd year undergraduate Researcher and Engineer at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). 
+Hi! I'm a 3rd year undergrad at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). 
 
 I'm broadly interested in Reinforcement Learning and Robot Learning. 
-Currently, I work on Policy Extraction for generative offline RL algorithms, and offline-to-online RL for robotics at [BAIR](https://bair.berkeley.edu), where I'm fortunate to be advised by professor [Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/). I've also had the chance to work on Test-Time policy improvement methods as an OpenAI research fellow, and online RL for VLA exploration and post-training with the [GEAR](https://research.nvidia.com/labs/gear/) team at NVIDIA. Previously, I've built LLM Infra with the ChipNemo team at NVIDIA, and worked on high-speed simulations on FPGAs for Robotaxi charging at Tesla. Outside research, I spend my time with friends at [Cal Launchpad](https://launchpad.studentorg.berkeley.edu), and playing IM basketball.
+Currently, I work on Policy Extraction for generative offline RL algorithms, and offline-to-online RL for robotics at [BAIR](https://bair.berkeley.edu), in professor [Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/)'s group. I've also had the chance to work on Test-Time policy improvement methods as an OpenAI research fellow, and online RL for VLA exploration and post-training with the [GEAR](https://research.nvidia.com/labs/gear/) team at NVIDIA. I'll also be working on RL research as a QR at Jump Trading this summer. Previously, I've built LLM Infra with the ChipNemo team at NVIDIA, and worked on high-speed simulations on FPGAs for Robotaxi charging at Tesla. Outside research, I spend my time with friends at [Cal Launchpad](https://launchpad.studentorg.berkeley.edu), and playing IM basketball.
 
 If you'd like to chat, please reach out at [andypeng at berkeley dot edu].
 
@@ -76,6 +76,28 @@ If you'd like to chat, please reach out at [andypeng at berkeley dot edu].
 
 <table class="pub-table" style="width:100%;border:0px;margin-right:auto;margin-left:auto;">
   <tbody>
+    <tr>
+      <td class="pub-image-cell">
+        <img src='/images/paper-images/qgf.png' width="200" alt="QGF Paper">
+      </td>
+      <td class="pub-text-cell">
+        <p style="font-weight:700; font-size: 1.1em; margin-bottom: 0.3em; margin-top: 0; line-height: 1.2;">
+        <strong>Test-Time Gradient Guidance of Flow Policies in Reinforcement Learning</strong>
+        </p>
+        <a href="https://zhouzypaul.github.io">Zhiyuan Zhou</a>,
+        <span style="text-decoration: underline;">Andy Peng</span>,
+        <a href="https://charleswxu.com">Charles Xu</a>,
+        <a href="https://colinqiyangli.github.io">Qiyang Li</a>,
+        <a href="https://aldeia.uk">Jost Tobias Springenberg</a>,
+        <a href="https://kevinfrans.github.io">Kevin Frans</a>,
+        <a href="https://people.eecs.berkeley.edu/~svlevine/">Sergey Levine</a>
+        <br>
+        <em>Preprint</em>, 2026
+        <br>
+        [<a href="https://arxiv.org/abs/2506.09477">paper</a>]
+        [<a href="https://q-guided-flow.github.io">website</a>]
+      </td>
+    </tr>
     <tr>
       <td class="pub-image-cell">
         <img src='/images/paper-images/pld.png' width="200" alt="PLD Paper">
