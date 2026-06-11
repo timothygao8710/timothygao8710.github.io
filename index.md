@@ -86,15 +86,15 @@ If you'd like to chat, please reach out at [andypeng at berkeley dot edu].
         </p>
         <a href="https://zhouzypaul.github.io">Zhiyuan Zhou</a>,
         <span style="text-decoration: underline;">Andy Peng</span>,
-        <a href="https://charleswxu.com">Charles Xu</a>,
-        <a href="https://colinqiyangli.github.io">Qiyang Li</a>,
+        <a href="https://charlesxu0124.github.io/">Charles Xu</a>,
+        <a href="https://colinqiyangli.github.io/">Qiyang Li</a>,
         <a href="https://aldeia.uk">Jost Tobias Springenberg</a>,
-        <a href="https://kevinfrans.github.io">Kevin Frans</a>,
+        <a href="https://kvfrans.com/">Kevin Frans</a>,
         <a href="https://people.eecs.berkeley.edu/~svlevine/">Sergey Levine</a>
         <br>
         <em>Preprint</em>, 2026
         <br>
-        [<a href="https://arxiv.org/abs/2506.09477">paper</a>]
+        [<a href="https://arxiv.org/pdf/2606.11087">paper</a>]
         [<a href="https://q-guided-flow.github.io">website</a>]
       </td>
     </tr>
