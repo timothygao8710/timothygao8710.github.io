@@ -16,14 +16,14 @@ minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "dark", "dirt", "
 
 # Site Settings
 locale                   : "en-US"
-title                    : 'Andy Peng'
+title                    : 'Timothy Gao'
 title_separator          : "-"
 subtitle                 :  # Portfolio website # site tagline that appears below site title in masthead
-name                     : 'Andy Peng'
-description              : "Andy Peng is an undergraduate EECS student at UC Berkeley interested in reinforcement learning and robotics."
-url                      : 'https://andypeng.github.io' # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+name                     : 'Timothy Gao'
+description              : "Timothy Gao is an undergraduate EECS student at UC Berkeley interested in LLMs."
+url                      : 'https://timothygao.github.io' # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : '/' # the subpath of your site, e.g. "/blog"
-repository               : 'andypeng05/andypeng.github.io' # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
+repository               : 'timothygao8710/timothygao.github.io' # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
@@ -104,10 +104,10 @@ analytics:
 
 # Site Author
 author:
-  name             : 'Andy Peng'
+  name             : 'Timothy Gao'
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an undergraduate EECS student at UC Berkeley, interested in reinforcement learning and robotics."
-  location         : "Los Angeles, CA"
+  bio              : "I am an undergraduate EECS student at UC Berkeley interested in LLMs."
+  location         : "Berkeley, CA"
   email            :
   links:
     # - label: "Email"
@@ -115,7 +115,7 @@ author:
     #   url: "mailto:"
     - label: "Website"
       icon: "fas fa-fw fa-link"
-      url: "https://andypeng.github.io"
+      url: "https://timothygao.github.io"
     # - label: "Twitter"
     #   icon: "fab fa-fw fa-twitter-square"
     #   # url: "https://twitter.com/"
@@ -134,16 +134,16 @@ footer:
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      url: https://twitter.com/andy_peng05
+      url: https://twitter.com/timothygao8710/
     - label: "LinkedIn"
       icon: "fab fa-linkedin"
-      url: https://www.linkedin.com/in/andypeng05/
+      url: https://www.linkedin.com/in/timothygao8710/
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: https://github.com/andypeng05
+      url: https://github.com/timothygao8710
     - label: "Google Scholar"
       icon: "ai ai-google-scholar"
-      url: https://scholar.google.com/citations?user=rhqRH0cAAAAJ&hl=en
+      url: https://github.com/timothygao8710
     # - label: "GitLab"
     #   icon: "fab fa-fw fa-gitlab"
     #   url: 

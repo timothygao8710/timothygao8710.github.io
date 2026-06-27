@@ -59,20 +59,20 @@ permalink: /
   }
 </style>
 
-![Andy Peng](./images/andyprofile.jpg)
+![Andy Peng](./images/pfp.jpeg)
 {:style="float: right; padding: 30px; max-width: 30%; min-width: 330px;"}
 
 <br/>
-Hi! I'm a 3rd year undergrad at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). 
+Hi! I'm a 4th year undergrad at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS), interested in LLMs. 
 
-I'm broadly interested in Reinforcement Learning and Robot Learning. 
+<!-- I'm broadly interested in Reinforcement Learning and Robot Learning. 
 Currently, I work on Policy Extraction for generative offline RL algorithms, and offline-to-online RL for robotics at [BAIR](https://bair.berkeley.edu), in professor [Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/)'s group. I've also had the chance to work on Test-Time policy improvement methods as an OpenAI research fellow, and online RL for VLA exploration and post-training with the [GEAR](https://research.nvidia.com/labs/gear/) team at NVIDIA. I'll also be working on RL research as a QR at Jump Trading this summer. Previously, I've built LLM Infra with the ChipNemo team at NVIDIA, and worked on high-speed simulations on FPGAs for Robotaxi charging at Tesla. Outside research, I spend my time with friends at [Cal Launchpad](https://launchpad.studentorg.berkeley.edu), and playing IM basketball.
 
-If you'd like to chat, please reach out at [andypeng at berkeley dot edu].
+If you'd like to chat, please reach out at [andypeng at berkeley dot edu]. -->
 
 ---
 
-## Publications
+<!-- ## Publications
 
 <table class="pub-table" style="width:100%;border:0px;margin-right:auto;margin-left:auto;">
   <tbody>
@@ -154,5 +154,5 @@ If you'd like to chat, please reach out at [andypeng at berkeley dot edu].
     </tr>
   </tbody>
 </table>
-
+ -->
 
