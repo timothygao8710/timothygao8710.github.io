@@ -8,8 +8,8 @@ main:
   #   url: '/research/'
   # - title: "Experience"
   #   url: '/experience/'
-  # - title: "Portfolio"
-  #   url: /portfolio/
+  - title: "Portfolio"
+    url: /portfolio/
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Sitemap"
