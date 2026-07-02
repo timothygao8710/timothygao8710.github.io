@@ -8,7 +8,7 @@ permalink: /notes/
 <div class="notes-index">
   <header class="notes-index__header">
     <h1 class="notes-index__title">Notes</h1>
-    <p class="notes-index__lead">Some things I think are cool! Currently mainly for my own reference, so heads up and apologies for poor writing, but hopefully it will get better. Recently this looks like deep learning, RL, optimization, and robotics.</p>
+    <p class="notes-index__lead">Some things I think are cool! Currently mainly for my own reference, so heads up and apologies for poor writing, but hopefully it will get better.</p>
   </header>
 
   {% assign note_list = site.pages | where_exp: "p", "p.path == '__no_match__'" %}
@@ -19,6 +19,17 @@ permalink: /notes/
   {% endfor %}
 
   <div class="notes-index__list">
+    <article class="notes-card">
+      <a class="notes-card__link" href="{{ '/notes/beyond-temperature/' | relative_url }}" aria-label="Open note: Beyond Temperature"></a>
+      <div class="notes-card__inner">
+        <h2 class="notes-card__title">Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</h2>
+        <p class="notes-card__desc">A final-project blog on learning per-token logit transformations with RLVR to escape the accuracy&ndash;diversity tradeoff that temperature sampling is stuck with.</p>
+        <div class="notes-card__meta">
+          <time class="notes-card__date" datetime="2026-05-15">May 15, 2026</time>
+          <span class="notes-card__hashtag">#llm</span>
+        </div>
+      </div>
+    </article>
     {% for note in note_list %}
       <article class="notes-card">
         <a class="notes-card__link" href="{{ note.url | relative_url }}" aria-label="Open note: {{ note.title | strip | escape }}"></a>

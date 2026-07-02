@@ -1,5 +1,5 @@
 ---
-title: "Dual projection"
+title: "temp"
 date: 2026-03-29
 description: "Polytope projection, Lagrangian dual, normal cones, and a small interactive μ-slider."
 tag: optimization

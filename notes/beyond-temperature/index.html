@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload='renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "$", right: "$", display: false},
+      {left: "\\(", right: "\\)", display: false}
+    ],
+    throwOnError: false
+  });'></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf7f1;
+    --card: #fdfbf6;
+    --ink: #1b2230;
+    --ink-soft: #5b6478;
+    --ink-faint: #8a91a0;
+    --rule: #e9dfc8;
+    --rule-soft: #f0e9d8;
+    --accent: #b84a2c;
+    --accent-soft: #efd6c8;
+    --link: #b84a2c;
+    --ref: #a8acb6;
+    --grid: #ede4ce;
+    --serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Top nav */
+  .navbar { border-bottom: 1px solid var(--rule); padding: 14px 0; background: var(--bg); }
+  .navbar-inner {
+    max-width: 1000px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .logo {
+    font-family: var(--sans); font-weight: 600; font-size: 14px;
+    letter-spacing: 0.01em; color: var(--ink); text-decoration: none;
+  }
+  .logo .bair { color: var(--accent); font-weight: 700; }
+  .nav-links { display: flex; gap: 22px; font-family: var(--sans); font-size: 13px; }
+  .nav-links a { color: var(--ink-soft); text-decoration: none; }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Article containers */
+  .article { max-width: 740px; margin: 0 auto; padding: 56px 24px 96px; }
+  .article-wide { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+
+  /* Title block */
+  h1.title {
+    font-family: var(--serif); font-weight: 600; font-size: 40px;
+    line-height: 1.12; letter-spacing: -0.012em; margin: 0 0 22px; color: var(--ink);
+  }
+  .byline { font-family: var(--sans); font-size: 14px; color: var(--ink-soft); margin-bottom: 4px; }
+  .byline a { color: var(--accent); text-decoration: none; }
+  .byline a:hover { text-decoration: underline; }
+  .pubdate {
+    font-family: var(--sans); font-size: 13px; color: var(--ink-faint);
+    margin-bottom: 38px; letter-spacing: 0.01em;
+  }
+
+  /* Body type */
+  p { margin: 0 0 18px; }
+  .article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(184, 74, 44, 0.3); }
+  .article a:hover { border-bottom-color: var(--accent); }
+  .article strong { font-weight: 600; }
+  .article em { font-style: italic; }
+  ol, ul { margin: 0 0 18px 24px; }
+  li { margin-bottom: 6px; }
+
+  /* Headings */
+  h2 {
+    font-family: var(--serif); font-weight: 600; font-size: 28px;
+    line-height: 1.22; margin: 52px 0 14px; letter-spacing: -0.008em;
+  }
+  h3 {
+    font-family: var(--serif); font-weight: 600; font-style: italic;
+    font-size: 22px; margin: 36px 0 10px; color: var(--ink);
+  }
+
+  /* Hero figure */
+  .hero {
+    margin: 0 0 40px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 24px 28px 22px;
+    box-shadow: 0 1px 0 rgba(184, 74, 44, 0.04), 0 8px 24px -16px rgba(27, 34, 48, 0.08);
+  }
+  .hero .eyebrow {
+    font-family: var(--sans); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+  .hero h3.figtitle {
+    font-family: var(--serif); font-style: normal; font-weight: 600;
+    font-size: 22px; line-height: 1.3; color: var(--ink);
+    margin: 0 0 16px; letter-spacing: -0.005em;
+  }
+  .hero svg { width: 100%; height: auto; display: block; }
+  .hero .figcaption {
+    font-family: var(--serif); font-style: italic; font-size: 15.5px;
+    color: var(--ink-soft); margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--rule-soft); line-height: 1.55;
+  }
+  .hero .figcaption strong { color: var(--ink); font-style: normal; font-weight: 600; }
+
+  /* TL;DR */
+  .tldr {
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    padding: 18px 24px;
+    margin: 0 0 32px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .tldr p { margin: 0; }
+  .tldr p + p { margin-top: 12px; }
+  .tldr .lead-line {
+    font-family: var(--sans); font-weight: 600; font-size: 11.5px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-right: 6px;
+  }
+
+  /* Blockquote */
+  blockquote {
+    margin: 24px 0; padding: 4px 0 4px 22px;
+    border-left: 3px solid var(--rule); color: var(--ink-soft);
+    font-style: italic; font-size: 19px;
+  }
+  blockquote p { margin: 0; }
+
+  /* Code */
+  code { font-family: var(--mono); font-size: 0.82em; background: var(--rule-soft); padding: 1px 6px; border-radius: 3px; }
+  pre {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 4px;
+    padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.55;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  /* Tables */
+  .tbl-wrap { margin: 22px 0 28px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-family: var(--sans); font-size: 14.5px; }
+  thead th { text-align: left; font-weight: 600; border-bottom: 2px solid var(--ink); padding: 10px 12px; color: var(--ink); }
+  thead th.num { text-align: center; }
+  tbody td { border-bottom: 1px solid var(--rule); padding: 9px 12px; color: var(--ink); }
+  tbody td.num { text-align: center; font-variant-numeric: tabular-nums; }
+  tbody td.lbl { font-weight: 500; }
+  tbody tr.highlight td { background: var(--accent-soft); font-weight: 600; }
+  tbody tr.highlight td.lbl { color: var(--accent); }
+  table caption {
+    caption-side: bottom; font-family: var(--serif); font-style: italic;
+    font-size: 15px; color: var(--ink-soft); margin-top: 12px; text-align: left; line-height: 1.55;
+  }
+  table caption strong { color: var(--ink); font-style: normal; font-weight: 600; }
+
+  /* Figures */
+  figure { margin: 26px 0; }
+  figure figcaption {
+    font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-soft);
+    margin-top: 12px; text-align: center; line-height: 1.55;
+  }
+  figure figcaption strong { color: var(--ink); font-style: normal; font-weight: 600; }
+  /* Widen figures inside .article to match the .article-wide column (940px) used by Figure 2.
+     .article content is 740px max; we extend each figure -100px on each side. Disabled below
+     940px viewport so figures don't bleed past the window edge. .fig-narrow opts a figure
+     out; .fig-spacious-large extends further and adds vertical breathing room. */
+  @media (min-width: 940px) {
+    .article > figure { margin-left: -100px; margin-right: -100px; }
+    .article > figure.fig-narrow { margin-left: 0; margin-right: 0; }
+    .article > figure.fig-spacious-large { margin-left: -130px; margin-right: -130px; }
+  }
+  .article > figure.fig-spacious-large { margin-top: 56px; margin-bottom: 56px; padding: 18px 0; }
+  .widget.widget-spacious { margin-top: 56px; margin-bottom: 56px; }
+  /* Compact qualitative-examples widget (Figure 6) — pulled in to be less screen-dominating. */
+  .qual-widget .head h4 { font-size: 18px; }
+  .qual-widget .head p.lead { font-size: 13px; }
+  .qual-widget .variant-tabs { font-size: 12px; margin: 4px 0 12px; }
+  .qual-widget .variant-tabs button { padding: 4px 11px; font-size: 12px; }
+  .qual-widget .example-card { padding: 10px 12px; margin: 8px 0; }
+  .qual-widget .example-card .ctx { font-size: 11px; padding: 7px 9px; margin-bottom: 7px; line-height: 1.4; }
+  .qual-widget .example-card .meta { font-size: 11px; margin-bottom: 7px; gap: 6px 12px; }
+  .qual-widget .example-card .topk h5 { font-size: 9.5px; margin: 0 0 4px; }
+  .qual-widget .example-card .topk table { font-size: 10.5px; }
+  .qual-widget .example-card .topk td { padding: 2px 4px; }
+  .qual-widget .example-card .topk td.bar { height: 18px; }
+  .qual-widget .example-card .topk td.bar .bar-track { top: 3px; bottom: 3px; }
+  .qual-widget .example-card .topk td.bar .pcnt { font-size: 10px; }
+
+  /* Section rule */
+  hr.sectrule { border: 0; border-top: 1px solid var(--rule); margin: 44px 0; }
+
+  /* ----- Interactive widget ----- */
+  .widget {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 26px 28px 22px; margin: 26px 0;
+    box-shadow: 0 1px 0 rgba(184, 74, 44, 0.04), 0 8px 24px -16px rgba(27, 34, 48, 0.08);
+    font-family: var(--sans); font-size: 14px; line-height: 1.55;
+  }
+  .widget .head h4 {
+    font-family: var(--serif); font-weight: 600; font-size: 21px;
+    letter-spacing: -0.005em; margin-bottom: 4px; color: var(--ink);
+  }
+  .widget .head p.lead { color: var(--ink-soft); font-size: 14px; max-width: 640px; margin: 0 0 14px; font-family: var(--sans); }
+  .widget .formula {
+    font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--ink);
+    background: rgba(184, 74, 44, 0.05); padding: 7px 14px;
+    border-left: 2px solid var(--accent); display: inline-block; margin-bottom: 18px;
+  }
+  .widget .formula .sub { font-style: normal; font-size: 0.7em; vertical-align: sub; }
+  .widget .presets {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px;
+    padding-bottom: 18px; border-bottom: 1px solid var(--rule);
+  }
+  .widget .presets button {
+    font-family: var(--sans); font-size: 11.5px; font-weight: 500; letter-spacing: 0.015em;
+    color: var(--ink-soft); background: transparent; border: 1px solid var(--rule);
+    border-radius: 999px; padding: 5px 13px; cursor: pointer; transition: all 0.15s;
+  }
+  .widget .presets button:hover { border-color: var(--accent); color: var(--accent); }
+  .widget .presets button.active { background: var(--accent); border-color: var(--accent); color: var(--card); }
+  .widget .plots { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 24px; }
+  @media (max-width: 720px) { .widget .plots { grid-template-columns: 1fr; gap: 20px; } }
+  .widget .plot h5 {
+    font-family: var(--sans); font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 8px;
+  }
+  .widget .plot svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .widget .plot svg text { font-family: var(--mono); font-size: 9.5px; fill: var(--ink-faint); }
+  .widget .plot svg text.plot-label { font-family: var(--sans); font-size: 10px; fill: var(--ink-soft); font-weight: 500; }
+  .widget .plot svg text.breakpoint-label { font-family: var(--mono); font-size: 10px; fill: var(--accent); font-weight: 500; }
+  .widget .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .widget .axis-line { stroke: var(--ink-faint); stroke-width: 0.8; }
+  .widget .transform-curve { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .widget .identity-line { fill: none; stroke: var(--ref); stroke-width: 1; stroke-dasharray: 3 3; }
+  .widget .breakpoint-marker { fill: var(--accent); stroke: var(--card); stroke-width: 2; }
+  .widget .breakpoint-guide { stroke: var(--accent-soft); stroke-width: 1; stroke-dasharray: 2 3; }
+  .widget .bar-orig { fill: var(--ref); opacity: 0.55; }
+  .widget .bar-new { fill: var(--accent); }
+  .widget .legend { display: flex; gap: 14px; margin: -4px 0 6px; font-size: 11px; color: var(--ink-soft); }
+  .widget .legend-item { display: flex; align-items: center; gap: 6px; }
+  .widget .legend-swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  .widget .swatch-orig { background: var(--ref); opacity: 0.55; }
+  .widget .swatch-new { background: var(--accent); }
+  .widget .swatch-line { width: 14px; height: 0; border-top: 1px dashed var(--ref); display: inline-block; margin-top: 5px; }
+  .widget .controls { display: flex; flex-direction: column; gap: 11px; padding-top: 18px; border-top: 1px solid var(--rule); }
+  .widget .control { display: grid; grid-template-columns: 32px 1fr 56px; align-items: center; gap: 14px; }
+  .widget .control .name { font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--ink); }
+  .widget .control .name .subnum { font-style: normal; font-size: 0.7em; vertical-align: sub; padding-left: 1px; }
+  .widget .control input[type=range] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 2px;
+    background: linear-gradient(to right, var(--rule), var(--rule)); outline: none; cursor: pointer;
+  }
+  .widget .control input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); cursor: pointer;
+    border: 2px solid var(--card); box-shadow: 0 0 0 1px var(--accent); transition: transform 0.1s;
+  }
+  .widget .control input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .widget .control input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer;
+    border: 2px solid var(--card); box-shadow: 0 0 0 1px var(--accent);
+  }
+  .widget .value { font-family: var(--mono); font-size: 12px; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+  .widget .wcaption {
+    font-size: 14.5px; color: var(--ink-soft); margin-top: 18px; padding-top: 14px;
+    border-top: 1px solid var(--rule-soft); font-style: italic; font-family: var(--serif); line-height: 1.55;
+  }
+
+  /* ----- Qualitative examples widget (Figure 6) ----- */
+  .qual-widget .variant-tabs {
+    display: flex; gap: 6px; margin: 6px 0 16px;
+    font-family: var(--sans); font-size: 13px;
+  }
+  .qual-widget .variant-tabs button {
+    border: 1px solid var(--rule); background: var(--card); color: var(--ink);
+    padding: 6px 14px; border-radius: 4px; cursor: pointer;
+    font-family: var(--sans); font-size: 13px;
+  }
+  .qual-widget .variant-tabs button:hover { border-color: var(--accent); color: var(--accent); }
+  .qual-widget .variant-tabs button.active {
+    background: var(--accent); color: var(--card); border-color: var(--accent);
+  }
+  .qual-widget .example-card {
+    border: 1px solid var(--rule); border-radius: 4px;
+    padding: 14px 16px; margin: 12px 0; background: var(--bg);
+  }
+  .qual-widget .example-card .ctx {
+    font-family: var(--mono); font-size: 12.5px;
+    white-space: pre-wrap; word-break: break-word;
+    background: var(--card); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 9px 11px; margin-bottom: 10px; line-height: 1.5;
+  }
+  .qual-widget .example-card .ctx .chosen {
+    background: rgba(184, 74, 44, 0.16); border-radius: 2px;
+    padding: 0 3px; font-weight: 700; color: var(--accent);
+  }
+  .qual-widget .example-card .ctx .post-dim { color: var(--ink-faint); }
+  .qual-widget .example-card .meta {
+    font-family: var(--sans); font-size: 12px; color: var(--ink-soft);
+    margin-bottom: 11px; display: flex; flex-wrap: wrap; gap: 8px 16px;
+  }
+  .qual-widget .example-card .meta b { color: var(--ink); font-weight: 700; }
+  .qual-widget .example-card .topk-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  @media (max-width: 640px) {
+    .qual-widget .example-card .topk-row { grid-template-columns: 1fr; }
+  }
+  .qual-widget .example-card .topk h5 {
+    font-family: var(--sans); font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-soft); margin: 0 0 6px;
+  }
+  .qual-widget .example-card .topk table {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  }
+  .qual-widget .example-card .topk td {
+    padding: 3px 5px; border-bottom: 1px dotted var(--rule);
+  }
+  .qual-widget .example-card .topk td.tok { color: var(--ink); white-space: nowrap; }
+  .qual-widget .example-card .topk td.bar {
+    width: 100%; position: relative; height: 22px;
+  }
+  .qual-widget .example-card .topk td.bar .bar-track {
+    position: absolute; top: 4px; bottom: 4px; left: 0; right: 6ch;
+  }
+  .qual-widget .example-card .topk td.bar .barfill {
+    height: 100%; border-radius: 2px; min-width: 1px;
+    background: rgba(90, 110, 140, 0.32);
+  }
+  .qual-widget .example-card .topk td.bar .barfill.warp {
+    background: rgba(184, 74, 44, 0.45);
+  }
+  .qual-widget .example-card .topk td.bar .pcnt {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    display: flex; align-items: center; padding: 0 4px;
+    color: var(--ink); font-size: 11px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Footnotes */
+  .footnotes {
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--rule);
+    font-size: 15px; color: var(--ink-soft); line-height: 1.6;
+  }
+  .footnotes ol { padding-left: 24px; margin: 0; }
+  .footnotes li { margin-bottom: 10px; }
+  sup a { text-decoration: none; }
+
+  /* KaTeX size tweak */
+  .katex { font-size: 1.02em; }
+  .katex-display { margin: 18px 0; }
+
+  @media (max-width: 580px) {
+    h1.title { font-size: 30px; }
+    body { font-size: 17px; }
+    .article { padding: 36px 18px 64px; }
+    h2 { font-size: 24px; }
+    .hero { padding: 20px; }
+    .hero h3.figtitle { font-size: 18px; }
+    .widget { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<article class="article">
+
+  <h1 class="title">Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</h1>
+
+  <div class="byline">
+    Timothy Gao, Rishi Athavale, Alex Luu, Harsha Polavaram, David Yang, Aryan Bansal
+  </div>
+
+  <div class="pubdate">May 15, 2026</div>
+
+  <!-- HERO: Pareto frontier -->
+  <div class="hero">
+
+    <svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pareto frontier: LogitMLP escapes the accuracy-diversity tradeoff achievable by temperature">
+      <defs>
+        <pattern id="grid_hero" width="55" height="35" patternUnits="userSpaceOnUse">
+          <path d="M 55 0 L 0 0 0 35" fill="none" stroke="#ede4ce" stroke-width="1"/>
+        </pattern>
+        <linearGradient id="region_grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#b84a2c" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#b84a2c" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
+      <rect width="720" height="420" fill="#fdfbf6"/>
+      <rect x="60" y="40" width="620" height="320" fill="url(#grid_hero)"/>
+
+      <!-- Shaded "unreachable by temperature" region -->
+      <path d="M 119.05 205.5 L 178.6 197.2 L 237.1 218.5 L 278.4 270.0 L 680 270.0 L 680 40 L 119.05 40 Z"
+            fill="url(#region_grad)"/>
+
+      <!-- Axes -->
+      <line x1="60" y1="360" x2="680" y2="360" stroke="#1b2230" stroke-width="1.2"/>
+      <line x1="60" y1="40" x2="60" y2="360" stroke="#1b2230" stroke-width="1.2"/>
+
+      <!-- Axis labels -->
+      <text x="370" y="395" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="13" fill="#5b6478">best@1 · accuracy of the most-likely sample</text>
+      <text x="22" y="200" text-anchor="middle" transform="rotate(-90 22 200)" font-family="IBM Plex Sans, sans-serif" font-size="13" fill="#5b6478">best@8 · accuracy of the best of 8 samples</text>
+
+      <!-- x ticks -->
+      <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#8a91a0">
+        <text x="60" y="378" text-anchor="middle">0.46</text>
+        <line x1="60" y1="360" x2="60" y2="365" stroke="#8a91a0" stroke-width="1"/>
+        <text x="178.6" y="378" text-anchor="middle">0.48</text>
+        <line x1="178.6" y1="360" x2="178.6" y2="365" stroke="#8a91a0" stroke-width="1"/>
+        <text x="297.1" y="378" text-anchor="middle">0.50</text>
+        <line x1="297.1" y1="360" x2="297.1" y2="365" stroke="#8a91a0" stroke-width="1"/>
+        <text x="415.7" y="378" text-anchor="middle">0.52</text>
+        <line x1="415.7" y1="360" x2="415.7" y2="365" stroke="#8a91a0" stroke-width="1"/>
+        <text x="534.3" y="378" text-anchor="middle">0.54</text>
+        <line x1="534.3" y1="360" x2="534.3" y2="365" stroke="#8a91a0" stroke-width="1"/>
+      </g>
+
+      <!-- y ticks -->
+      <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#8a91a0">
+        <text x="53" y="365" text-anchor="end">0.76</text>
+        <line x1="55" y1="360" x2="60" y2="360" stroke="#8a91a0" stroke-width="1"/>
+        <text x="53" y="266" text-anchor="end">0.80</text>
+        <line x1="55" y1="261.5" x2="60" y2="261.5" stroke="#8a91a0" stroke-width="1"/>
+        <text x="53" y="167" text-anchor="end">0.84</text>
+        <line x1="55" y1="163.1" x2="60" y2="163.1" stroke="#8a91a0" stroke-width="1"/>
+        <text x="53" y="69" text-anchor="end">0.88</text>
+        <line x1="55" y1="64.6" x2="60" y2="64.6" stroke="#8a91a0" stroke-width="1"/>
+      </g>
+
+      <!-- Frontier dashed connecting line -->
+      <polyline points="119.05,205.5 178.6,197.2 237.1,218.5 278.4,270.0"
+                fill="none" stroke="#8a91a0" stroke-width="1.4" stroke-dasharray="5,4"/>
+
+      <!-- Temperature sweep points -->
+      <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#5b6478">
+        <circle cx="119.05" cy="205.5" r="6" fill="#5b6478"/>
+        <text x="105" y="195" text-anchor="end">T = 1.5</text>
+
+        <circle cx="178.6" cy="197.2" r="6" fill="#5b6478"/>
+        <text x="186" y="190" text-anchor="start">T = 1.0</text>
+
+        <circle cx="237.1" cy="218.5" r="6" fill="#5b6478"/>
+        <text x="245" y="213" text-anchor="start">T = 0.7</text>
+
+        <circle cx="278.4" cy="270.0" r="6" fill="#5b6478"/>
+        <text x="286" y="265" text-anchor="start">T = 0.5</text>
+      </g>
+
+      <!-- LogitMLP point: best@1=0.549, best@8=0.873 -->
+      <g>
+        <circle cx="615" cy="69.5" r="20" fill="#b84a2c" opacity="0.16">
+          <animate attributeName="r" values="16;26;16" dur="2.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.16;0.04;0.16" dur="2.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="615" cy="69.5" r="8.5" fill="#b84a2c" stroke="#fdfbf6" stroke-width="2"/>
+        <line x1="615" y1="78" x2="280" y2="265" stroke="#b84a2c" stroke-width="1.2" stroke-dasharray="4,4" opacity="0.45"/>
+
+        <text x="615" y="48" text-anchor="middle" font-family="EB Garamond, serif" font-weight="600" font-size="17" fill="#b84a2c">+ LogitMLP</text>
+        <text x="615" y="98" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#b84a2c">(0.549, 0.873)</text>
+      </g>
+
+    </svg>
+    <div class="figcaption">
+      Each gray point is the same Full-RLVR Qwen3-1.7B checkpoint evaluated at a different sampling temperature on MATH-500; together they trace an accuracy–diversity Pareto frontier. Stacking LogitMLP on top of the <em>same</em> checkpoint (orange) sits well above the frontier on both axes: higher best@1 than the lowest-$T$ setting, and higher best@8 than the highest-$T$ setting.
+    </div>
+  </div>
+
+  <hr class="sectrule" />
+
+  <h2>Why should temperature work in the first place?</h2>
+
+  <p>After we've spent millions of dollars pretraining a model, more millions post-training it, and shipped the result to production, we <em>still</em> divide its logits by a scalar $T$ before sampling. Adjusting this single number reliably improves downstream metrics across nearly every model and benchmark. Even after training has converged, an inference-time transformation of the output distribution can still produce non-trivial gains.</p>
+
+  <p>But this raises a natural question:</p>
+
+  <blockquote>
+    <p>Is multiplying logits by a scalar really the right inference-time transformation?</p>
+  </blockquote>
+
+  <p>A growing body of work suggests it isn't. Sampling methods like top-$k$, top-$p$ (nucleus), and min-$p$ exist precisely because reshaping the distribution beyond a uniform scaling is useful. Entropy-adaptive samplers like Mirostat, EDT, and Entropix exist because next-token distributions vary greatly across tokens, so applying a single temperature and sampling rule globally is suboptimal.</p>
+    
+  <figure class="fig-spacious-large">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: end;">
+      <div>
+        <svg viewBox="0 0 460 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four sampling methods — temperature, top-k, top-p, and min-p — each reshape a softmax distribution in a different way">
+          <rect width="460" height="270" fill="#fdfbf6"/>
+
+          <!-- Panel: Temperature (top-left) -->
+          <g font-family="IBM Plex Sans, sans-serif">
+            <text x="30" y="22" font-size="11" font-weight="600" fill="#1b2230" letter-spacing="0.04em">Temperature</text>
+            <text x="30" y="35" font-size="9" fill="#5b6478" font-style="italic">uniform sharpening / flattening</text>
+            <line x1="30" y1="100" x2="200" y2="100" stroke="#1b2230" stroke-width="1"/>
+            <g fill="none" stroke="#8a91a0" stroke-width="1" stroke-dasharray="2,2">
+              <rect x="40"  y="65"  width="14" height="35"/>
+              <rect x="60"  y="55"  width="14" height="45"/>
+              <rect x="80"  y="75"  width="14" height="25"/>
+              <rect x="100" y="82"  width="14" height="18"/>
+              <rect x="120" y="86"  width="14" height="14"/>
+              <rect x="140" y="90"  width="14" height="10"/>
+              <rect x="160" y="93"  width="14" height="7"/>
+              <rect x="180" y="95"  width="14" height="5"/>
+            </g>
+            <g fill="#b84a2c" fill-opacity="0.85">
+              <rect x="40"  y="78"  width="14" height="22"/>
+              <rect x="60"  y="52"  width="14" height="48"/>
+              <rect x="80"  y="85"  width="14" height="15"/>
+              <rect x="100" y="91"  width="14" height="9"/>
+              <rect x="120" y="94"  width="14" height="6"/>
+              <rect x="140" y="96"  width="14" height="4"/>
+              <rect x="160" y="98"  width="14" height="2"/>
+              <rect x="180" y="99"  width="14" height="1"/>
+            </g>
+          </g>
+
+          <!-- Panel: top-k (top-right) -->
+          <g font-family="IBM Plex Sans, sans-serif">
+            <text x="245" y="22" font-size="11" font-weight="600" fill="#1b2230" letter-spacing="0.04em">top-<tspan font-style="italic">k</tspan></text>
+            <text x="245" y="35" font-size="9" fill="#5b6478" font-style="italic">keep top k tokens, zero the rest</text>
+            <line x1="245" y1="100" x2="415" y2="100" stroke="#1b2230" stroke-width="1"/>
+            <g fill="none" stroke="#8a91a0" stroke-width="1" stroke-dasharray="2,2">
+              <rect x="255" y="65"  width="14" height="35"/>
+              <rect x="275" y="55"  width="14" height="45"/>
+              <rect x="295" y="75"  width="14" height="25"/>
+              <rect x="315" y="82"  width="14" height="18"/>
+              <rect x="335" y="86"  width="14" height="14"/>
+              <rect x="355" y="90"  width="14" height="10"/>
+              <rect x="375" y="93"  width="14" height="7"/>
+              <rect x="395" y="95"  width="14" height="5"/>
+            </g>
+            <g fill="#b84a2c" fill-opacity="0.85">
+              <rect x="255" y="60"  width="14" height="40"/>
+              <rect x="275" y="48"  width="14" height="52"/>
+              <rect x="295" y="71"  width="14" height="29"/>
+            </g>
+            <line x1="310" y1="42" x2="310" y2="100" stroke="#1b2230" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="313" y="50" font-size="9" font-family="IBM Plex Mono, monospace" fill="#1b2230">k=3</text>
+          </g>
+
+          <!-- Panel: top-p / nucleus (bottom-left) -->
+          <g font-family="IBM Plex Sans, sans-serif">
+            <text x="30" y="155" font-size="11" font-weight="600" fill="#1b2230" letter-spacing="0.04em">top-<tspan font-style="italic">p</tspan> <tspan fill="#5b6478" font-weight="400">(nucleus)</tspan></text>
+            <text x="30" y="168" font-size="9" fill="#5b6478" font-style="italic">smallest set with cumulative mass &#8805; p</text>
+            <line x1="30" y1="233" x2="200" y2="233" stroke="#1b2230" stroke-width="1"/>
+            <g fill="none" stroke="#8a91a0" stroke-width="1" stroke-dasharray="2,2">
+              <rect x="40"  y="198" width="14" height="35"/>
+              <rect x="60"  y="188" width="14" height="45"/>
+              <rect x="80"  y="208" width="14" height="25"/>
+              <rect x="100" y="215" width="14" height="18"/>
+              <rect x="120" y="219" width="14" height="14"/>
+              <rect x="140" y="223" width="14" height="10"/>
+              <rect x="160" y="226" width="14" height="7"/>
+              <rect x="180" y="228" width="14" height="5"/>
+            </g>
+            <g fill="#b84a2c" fill-opacity="0.85">
+              <rect x="40"  y="194" width="14" height="39"/>
+              <rect x="60"  y="183" width="14" height="50"/>
+              <rect x="80"  y="205" width="14" height="28"/>
+              <rect x="100" y="213" width="14" height="20"/>
+            </g>
+            <line x1="116" y1="175" x2="116" y2="233" stroke="#1b2230" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="119" y="183" font-size="9" font-family="IBM Plex Mono, monospace" fill="#1b2230">p=0.9</text>
+          </g>
+
+          <!-- Panel: min-p (bottom-right) -->
+          <g font-family="IBM Plex Sans, sans-serif">
+            <text x="245" y="155" font-size="11" font-weight="600" fill="#1b2230" letter-spacing="0.04em">min-<tspan font-style="italic">p</tspan></text>
+            <text x="245" y="168" font-size="9" fill="#5b6478" font-style="italic">drop tokens below p&#x22C5;p<tspan baseline-shift="sub" font-size="7">max</tspan></text>
+            <line x1="245" y1="233" x2="415" y2="233" stroke="#1b2230" stroke-width="1"/>
+            <g fill="none" stroke="#8a91a0" stroke-width="1" stroke-dasharray="2,2">
+              <rect x="255" y="198" width="14" height="35"/>
+              <rect x="275" y="188" width="14" height="45"/>
+              <rect x="295" y="208" width="14" height="25"/>
+              <rect x="315" y="215" width="14" height="18"/>
+              <rect x="335" y="219" width="14" height="14"/>
+              <rect x="355" y="223" width="14" height="10"/>
+              <rect x="375" y="226" width="14" height="7"/>
+              <rect x="395" y="228" width="14" height="5"/>
+            </g>
+            <g fill="#b84a2c" fill-opacity="0.85">
+              <rect x="255" y="193" width="14" height="40"/>
+              <rect x="275" y="182" width="14" height="51"/>
+              <rect x="295" y="204" width="14" height="29"/>
+              <rect x="315" y="212" width="14" height="21"/>
+              <rect x="335" y="217" width="14" height="16"/>
+            </g>
+            <line x1="248" y1="214" x2="415" y2="214" stroke="#1b2230" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="412" y="211" text-anchor="end" font-size="9" font-family="IBM Plex Mono, monospace" fill="#1b2230">p&#x22C5;p<tspan baseline-shift="sub" font-size="7">max</tspan></text>
+          </g>
+
+          <!-- shared legend -->
+          <g font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#5b6478">
+            <rect x="30" y="258" width="9" height="7" fill="none" stroke="#8a91a0" stroke-dasharray="2,2"/>
+            <text x="44" y="265">base softmax</text>
+            <rect x="130" y="258" width="9" height="7" fill="#b84a2c" fill-opacity="0.85"/>
+            <text x="144" y="265">after sampler</text>
+          </g>
+        </svg>
+        <div style="font-family:var(--sans); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; text-align:center; color:var(--ink-soft); margin-top:6px;">Sampling methods reshape the distribution</div>
+      </div>
+      <div>
+        <img src="bair_blog_assets/00_branching_points.jpg" alt="Hand-drawn diagram: next-token entropy along a chain-of-thought trace, mostly low with a handful of sharp spikes labeled as branching points." style="width:100%; display:block; border:1px solid var(--rule); border-radius:3px;" />
+        <div style="font-family:var(--sans); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; text-align:center; color:var(--ink-soft); margin-top:6px;">Per-token entropy varies along the trace</div>
+      </div>
+    </div>
+    <figcaption><strong>Figure 1.</strong> Left: temperature is one of many ways to reshape a next-token distribution — top-$k$, top-$p$ (nucleus), and min-$p$ each apply a different non-temperature transformation, and entropy-adaptive samplers like Mirostat, EDT, and Entropix compose these per token. Right: empirically, the entropy of the next-token distribution varies dramatically across a chain-of-thought trace, with most positions low-entropy and a few sharp <em>branching points</em>, so a single global sampler is regime-agnostic. </figcaption>
+  </figure>
+    
+  <p>These point to two distinct limitations of temperature:</p>
+
+  <ol>
+    <li><strong>Expressivity.</strong> A scalar $1/T$ can sharpen or flatten the distribution, but it cannot, for example, zero out a long noisy tail of low-probability tokens.</li>
+    <li><strong>Token-uniformity.</strong> Recent analyses of chain-of-thought reasoning show that next-token distributions cluster into two regimes: most tokens are low-entropy continuations (suffixes, finishing a number), while a small minority of high-entropy "forking" tokens sit at branching points in the reasoning trajectory — yet temperature is regime-agnostic.</li>
+  </ol>
+
+  <hr class="sectrule" />
+
+  <h2>A more expressive transform</h2>
+
+  <p>Let $\ell_t \in \mathbb{R}^V$ be the logits at position $t$ over a vocabulary of size $V$. Temperature scaling is the map $\ell_t \mapsto \ell_t / T$. Truncation rules like top-$k$ and top-$p$ send the tail of $\ell_t$ to $-\infty$. All of these — and their compositions — are special cases of <em>monotonic</em> transforms: maps that preserve the relative ordering of the logits, and therefore the base model's argmax and top-$k$ predictions.</p>
+
+  <p>We pick the simplest non-trivial generalization: a two-piece monotonic function with two slopes and a breakpoint,</p>
+
+  <p>$$f(\ell;\, s_1, s_2, b) \;=\; s_1\,\ell \;+\; (s_2 - s_1)\,\mathrm{ReLU}(\ell - b).$$</p>
+
+  <p>When $s_1, s_2 > 0$ this is strictly increasing, so the token ranking is preserved exactly — LogitMLP cannot rerank, only reshape. The family is rich enough to contain several familiar decoders as special cases: temperature ($s_1 = s_2 = 1/T$), top-$k$-like sharpening (small $s_1$ with $b$ between the $k$-th and $(k\!+\!1)$-th logit), and anti-overconfidence ($s_2 \ll s_1$ with $b$ just below the top logit, flattening an over-committed head).</p>
+
+  <p>Crucially, the family lets us independently stretch the <em>head</em> and the <em>tail</em> of the logit distribution — something a scalar cannot do. The widget below lets you try the transform directly. The left panel shows the transform itself; the right panel shows how it actually reshapes the next-token distribution on a representative logit vector.</p>
+
+</article>
+
+<!-- Wider container for the interactive figure -->
+<div class="article-wide">
+  <div class="widget widget-spacious">
+    <div class="head">
+      <h4>Figure 2 · The piecewise monotonic logit transform</h4>
+      <p class="lead">One family that contains temperature, top-k-like sharpening, and anti-overconfidence.</p>
+      <div class="formula">
+        f(ℓ) = s<span class="sub">1</span> · ℓ &nbsp;+&nbsp; (s<span class="sub">2</span> − s<span class="sub">1</span>) · ReLU(ℓ − b)
+      </div>
+    </div>
+
+    <div class="presets">
+      <button data-preset="identity">Identity (T = 1)</button>
+      <button data-preset="temp_low">Temperature T = 0.5</button>
+      <button data-preset="temp_high">Temperature T = 2</button>
+      <button data-preset="topk">Top-k–like sharpen</button>
+      <button data-preset="anti">Anti-overconfidence</button>
+    </div>
+
+    <div class="plots">
+      <div class="plot">
+        <h5>Transform &nbsp;·&nbsp; f(ℓ) vs ℓ</h5>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch swatch-new"></span>f(ℓ)</div>
+          <div class="legend-item"><span class="swatch-line"></span>identity (T = 1)</div>
+        </div>
+        <svg id="transform-svg" viewBox="0 0 460 270" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="plot">
+        <h5>Probabilities &nbsp;·&nbsp; softmax over a sample vocabulary</h5>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch swatch-orig"></span>original</div>
+          <div class="legend-item"><span class="legend-swatch swatch-new"></span>transformed</div>
+        </div>
+        <svg id="prob-svg" viewBox="0 0 460 270" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="control">
+        <span class="name">s<span class="subnum">1</span></span>
+        <input type="range" id="s1" min="0.25" max="4" step="0.01" value="1">
+        <span class="value" id="s1-val">1.00</span>
+      </div>
+      <div class="control">
+        <span class="name">s<span class="subnum">2</span></span>
+        <input type="range" id="s2" min="0.25" max="4" step="0.01" value="1">
+        <span class="value" id="s2-val">1.00</span>
+      </div>
+      <div class="control">
+        <span class="name">b</span>
+        <input type="range" id="b" min="-2" max="10" step="0.05" value="4">
+        <span class="value" id="b-val">4.00</span>
+      </div>
+    </div>
+
+    <div class="wcaption">
+      Temperature is the special case s<sub>1</sub> = s<sub>2</sub> = 1/T. Setting the slopes apart lets the head and the tail of the logit distribution be reshaped independently — strictly more expressive than scaling, while still preserving the model's top-k ranking.
+    </div>
+  </div>
+</div>
+
+<article class="article">
+
+  <h2>Making it token-adaptive</h2>
+
+  <p>To address the second limitation, we condition $(s_1, s_2, b)$ on the current token's own representation. At step $t$, let $h_t \in \mathbb{R}^d$ be the post-final-norm hidden state. We concatenate $h_t$ with three detached statistics of the logit vector — $\max(\ell_t)$, $\mathrm{mean}(\ell_t)$, $\mathrm{std}(\ell_t)$ — and feed the result to a 2-layer MLP $\phi_\theta : \mathbb{R}^{d+3} \to \mathbb{R}^3$:</p>
+
+  <p>$$(\tilde s_1, \tilde s_2, \tilde b) \;=\; \phi_\theta\big([\,h_t;\; \max\ell_t,\; \mathrm{mean}\,\ell_t,\; \mathrm{std}\,\ell_t\,]\big).$$</p>
+
+  <p>We squash these into reasonable ranges,</p>
+
+  <p>$$s_i \;=\; \exp\!\big(\log 4 \cdot (2\sigma(\tilde s_i) - 1)\big) \in (1/4,\, 4), \qquad b \;=\; \max(\ell_t) - 4\,\mathrm{std}(\ell_t)\cdot\sigma(\tilde b),$$</p>
+
+  <p>so the slopes are bounded multiplicatively (at most a $4\times$ deviation from temperature 1) and the breakpoint is anchored in the high-probability region of the logit distribution. The final next-token distribution is $p_t = \mathrm{softmax}(f(\ell_t;\, s_1, s_2, b))$.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LogitMLP architecture">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1b2230"/>
+    </marker>
+    <marker id="arr_acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b84a2c"/>
+    </marker>
+  </defs>
+  <rect width="720" height="360" fill="#fdfbf6"/>
+
+  <g font-family="IBM Plex Sans, sans-serif" font-size="12">
+    <text x="30" y="28" font-weight="600" fill="#8a91a0" font-size="10" letter-spacing="0.1em">FROZEN BASE LLM ❄</text>
+
+    <rect x="30" y="48" width="170" height="34" fill="#faf7f1" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="115" y="69" text-anchor="middle" fill="#1b2230">Transformer block</text>
+
+    <rect x="30" y="92" width="170" height="34" fill="#faf7f1" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="115" y="113" text-anchor="middle" fill="#1b2230">…</text>
+
+    <rect x="30" y="136" width="170" height="34" fill="#faf7f1" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="115" y="157" text-anchor="middle" fill="#1b2230">Transformer block</text>
+
+    <rect x="30" y="180" width="170" height="28" fill="#f0e9d8" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="115" y="199" text-anchor="middle" fill="#1b2230" font-style="italic">final norm</text>
+
+    <text x="115" y="232" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="16">h&#x209C;</text>
+    <line x1="115" y1="208" x2="115" y2="222" stroke="#1b2230" stroke-width="1.1" marker-end="url(#arr)"/>
+
+    <rect x="30" y="248" width="170" height="32" fill="#faf7f1" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="115" y="269" text-anchor="middle" fill="#1b2230">unembedding W<tspan font-size="0.7em" baseline-shift="sub">U</tspan></text>
+    <line x1="115" y1="238" x2="115" y2="246" stroke="#1b2230" stroke-width="1.1" marker-end="url(#arr)"/>
+
+    <text x="115" y="302" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="16">&#x2113;&#x209C;</text>
+    <line x1="115" y1="280" x2="115" y2="290" stroke="#1b2230" stroke-width="1.1" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- LogitMLP (trainable) -->
+  <g font-family="IBM Plex Sans, sans-serif" font-size="12">
+    <line x1="125" y1="232" x2="290" y2="232" stroke="#b84a2c" stroke-width="1.4" marker-end="url(#arr_acc)"/>
+
+    <rect x="290" y="200" width="160" height="64" fill="#fff5ed" stroke="#b84a2c" stroke-width="1.5" rx="3"/>
+    <text x="370" y="219" text-anchor="middle" font-weight="700" fill="#b84a2c" font-size="13">LogitMLP</text>
+    <text x="370" y="236" text-anchor="middle" fill="#5b6478" font-size="11">2-layer MLP, ~525K params</text>
+    <text x="370" y="253" text-anchor="middle" fill="#b84a2c" font-style="italic">trainable ✦</text>
+  </g>
+
+  <!-- Right side: transform + softmax -->
+  <g font-family="IBM Plex Sans, sans-serif" font-size="12">
+    <!-- ℓ_t: one continuous path, horizontal then curve up into the transform -->
+    <path d="M 125 302 L 555 302 Q 580 302 580 206" fill="none" stroke="#1b2230" stroke-width="1.1" marker-end="url(#arr)"/>
+
+    <rect x="520" y="158" width="170" height="48" fill="#faf7f1" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="605" y="180" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="14">f(ℓ&#x209C;; s₁, s₂, b)</text>
+    <text x="605" y="197" text-anchor="middle" fill="#5b6478" font-size="11">piecewise transform</text>
+
+    <!-- (s₁, s₂, b): one labelled arrow from LogitMLP into the transform -->
+    <path d="M 450 232 L 520 232 Q 540 232 540 206" fill="none" stroke="#b84a2c" stroke-width="1.4" marker-end="url(#arr_acc)"/>
+    <text x="485" y="223" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="15" fill="#b84a2c">(s₁, s₂, b)</text>
+
+    <rect x="520" y="92" width="170" height="40" fill="#f0e9d8" stroke="#1b2230" stroke-width="1.1"/>
+    <text x="605" y="117" text-anchor="middle" fill="#1b2230">softmax → sample</text>
+    <line x1="605" y1="158" x2="605" y2="138" stroke="#1b2230" stroke-width="1.1" marker-end="url(#arr)"/>
+
+    <text x="605" y="78" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="16">o&#x209C;</text>
+    <line x1="605" y1="92" x2="605" y2="82" stroke="#1b2230" stroke-width="1.1" marker-end="url(#arr)"/>
+  </g>
+
+</svg>
+    <figcaption>
+      <strong>Figure 3.</strong> LogitMLP architecture. The base LLM is frozen. At each position, the post-final-norm hidden state $h_t$ feeds a small MLP that emits $(s_1, s_2, b)$, the parameters of a piecewise-linear monotonic transform $f$ applied to the logits before softmax.
+    </figcaption>
+  </figure>
+
+  <p>For the default hidden width $d_{\text{mlp}} = 256$ on Qwen3-1.7B (with hidden size 2048), $\phi_\theta$ has approximately 525K parameters — well under 0.1% of the base model. This is a deliberate design choice. The MLP can in principle implement a different transform at every decoding step, but it has very little capacity with which to memorize task knowledge. Whatever gains it produces have to come from a better <em>output transformation</em>, not from learning math.</p>
+
+  <hr class="sectrule" />
+
+  <h2>Training: RLVR with the base model frozen</h2>
+
+  <p>We train $\phi_\theta$ with RLVR — specifically, DAPO<sup><a href="#fn1" id="ref1">1</a></sup> with group-relative advantages — on the DAPO-Math-17K dataset, while keeping all 1.7B base-model parameters frozen. Rollouts are sampled under the transformed distribution, and the MLP outputs influence the trajectory and the log-probabilities; the policy gradient backpropagates only through $\phi_\theta$. We initialize $\phi_\theta$ so the transform starts at near-identity, with the KL to the base distributions below $10^{-4}$.</p>
+
+  <p>We consider two RLVR objectives. <strong>Standard DAPO (pass@1)</strong> optimizes the mean reward across a rollout group. A <strong>pass@$k$ variant</strong> replaces the group baseline with the analytical pass@$k$ estimator of Chen et al., effectively encouraging the policy to maximize the <em>maximum</em> reward across a group of $k$ rollouts. The pass@1 objective rewards being right on every rollout; pass@$k$ rewards being right at least once, which incentivizes exploration.</p>
+
+  <hr class="sectrule" />
+
+  <h2>Results</h2>
+
+  <p>We post-train <a href="https://huggingface.co/Qwen/Qwen3-1.7B">Qwen3-1.7B</a> on DAPO-Math-17K and evaluate on MATH-500. Baselines are (i) the best of a global temperature sweep ($T \in \{0.3, 0.5, 0.8, 1.0, 1.3\}$), denoted GLOBAL-$T^\star$, and (ii) full-parameter RLVR fine-tuning at the same data and compute budget. We report pass@$k$ via the <a href="https://arxiv.org/pdf/2107.03374">unbiased Codex estimator</a> over $n = 16$ rollouts per problem.</p>
+
+  <h3>Finding 1: LogitMLP recovers most of full-parameter RLVR on pass@1</h3>
+
+  <p>Trained with the standard DAPO (pass@1) objective, LogitMLP closes most of the gap between the base model and full-parameter RLVR:</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th class="num">Mean acc.</th>
+          <th class="num">Worst@8</th>
+          <th class="num">Best@8</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lbl">Best global $T^\star$</td>
+          <td class="num">0.231</td>
+          <td class="num">0.051</td>
+          <td class="num">0.496</td>
+        </tr>
+        <tr class="highlight">
+          <td class="lbl">LogitMLP (pass@1)</td>
+          <td class="num">0.523</td>
+          <td class="num">0.240</td>
+          <td class="num">0.682</td>
+        </tr>
+        <tr>
+          <td class="lbl">Full-param RLVR (pass@1)</td>
+          <td class="num">0.534</td>
+          <td class="num">0.298</td>
+          <td class="num">0.742</td>
+        </tr>
+      </tbody>
+      <caption><strong>Table 1.</strong> MATH-500 on Qwen3-1.7B. A two-piece monotonic transform of the logits — trained on under 0.1% of the parameters, without modifying any base weight — captures most of what RLVR teaches the model.</caption>
+    </table>
+  </div>
+
+  <p>LogitMLP cannot rerank tokens, acquire new knowledge, or change internal representations, so any portion of full-RLVR's benefit that requires those things is unreachable by construction. We also found that using the optimal sampling temperature alone improves significantly over sampling naively ($T = 1$), with up to a 10-point increase in pass@$k$. One perspective is that temperature inherently fixes some measure of calibration, and its effectiveness here suggests that the base model is not well-calibrated. This is known to be true for <a href="https://arxiv.org/abs/2003.07892">small models</a> and <a href="https://arxiv.org/abs/2303.08774">post-trained models</a>. On such models, our results suggest a non-trivial fraction of what RLVR teaches is expressible at decode time, not in the weights. We find this holds for both the Qwen and Llama model families (see paper). </p>
+
+  <h3>Finding 2: Pass@k gains are diversity, not reasoning</h3>
+
+  <p>When we instead train LogitMLP with the pass@$k$ objective and decompose the result by metric, an interesting pattern emerges:</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th class="num">best@8</th>
+          <th class="num">mean acc.</th>
+          <th class="num">worst@8</th>
+          <th class="num">entropy</th>
+          <th class="num">uniq/8</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lbl">Best global $T^\star$</td>
+          <td class="num">0.496</td>
+          <td class="num">0.231</td>
+          <td class="num">0.051</td>
+          <td class="num">0.396</td>
+          <td class="num">0.219</td>
+        </tr>
+        <tr class="highlight">
+          <td class="lbl">LogitMLP (pass@k)</td>
+          <td class="num">0.786</td>
+          <td class="num">0.328</td>
+          <td class="num">0.062</td>
+          <td class="num">1.267</td>
+          <td class="num">0.566</td>
+        </tr>
+        <tr>
+          <td class="lbl">Full-param RLVR (pass@k)</td>
+          <td class="num">0.692</td>
+          <td class="num">0.427</td>
+          <td class="num">0.146</td>
+          <td class="num">0.473</td>
+          <td class="num">0.256</td>
+        </tr>
+      </tbody>
+      <caption><strong>Table 2.</strong> Pass@$k$-trained LogitMLP <em>beats</em> full-parameter RLVR on best@8 by 9.4 points, but loses on mean and worst@8. The gain is entirely sampling-driven: answer entropy nearly triples and the expected number of distinct answers in an 8-subset more than doubles.</caption>
+    </table>
+  </div>
+
+  <p>LogitMLP sets the strongest best@8 — by a wide margin — but <em>loses</em> on mean accuracy and worst@8. The empirical answer entropy nearly triples, and the expected number of distinct answers in a random 8-subset more than doubles. The model is not producing more correct rollouts; it is producing more <em>varied</em> ones, and that variance happens to be enough to push best@8 above full RLVR.</p>
+
+  <p>This is exactly what we'd expect from an architecture that is allowed to reshape the distribution but not change the model's underlying reasoning. It is learning better sampling, exploring more semantically diverse reasoning paths, while balancing coverage of the answer space with exploitation of likely-correct modes.
+    
+    LogitMLP shows that better sampling matters more for pass@$k$ than pass@$1$, and reshaping without reranking alone is sufficient for better sampling.
+    
+    It is also a useful diagnostic for pass@$k$ training more broadly: when an intervention restricted to <em>sampling alone</em> (no new weights, no reranking) can still beat full-parameter RL on best@$k$, that tells you the pass@$k$ objective is rewarding diversity more than capability at this scale.</p>
+
+  <h3>Finding 3: Stacking on full RLVR breaks the accuracy–diversity frontier</h3>
+
+  <p>We take a fully RLVR-trained checkpoint and ask: can LogitMLP add anything on top? The natural comparison is sweeping temperature on that same checkpoint, which traces out an accuracy–diversity Pareto frontier. Lower $T$ increases best@1 at the cost of best@8, while higher $T$ has the opposite effect.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th class="num">best@1</th>
+          <th class="num">best@4</th>
+          <th class="num">best@8</th>
+          <th class="num">avg uniq</th>
+          <th class="num">entropy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="lbl">Full-RLVR @ $T = 0.5$</td><td class="num">0.492</td><td class="num">0.704</td><td class="num">0.768</td><td class="num">2.03</td><td class="num">0.54</td></tr>
+        <tr><td class="lbl">Full-RLVR @ $T = 0.7$</td><td class="num">0.485</td><td class="num">0.718</td><td class="num">0.790</td><td class="num">2.17</td><td class="num">0.61</td></tr>
+        <tr><td class="lbl">Full-RLVR @ $T = 1.0$</td><td class="num">0.480</td><td class="num">0.726</td><td class="num">0.798</td><td class="num">2.33</td><td class="num">0.68</td></tr>
+        <tr><td class="lbl">Full-RLVR @ $T = 1.5$</td><td class="num">0.465</td><td class="num">0.740</td><td class="num">0.818</td><td class="num">2.73</td><td class="num">0.85</td></tr>
+        <tr class="highlight"><td class="lbl">+ LogitMLP @ $T = 1.0$</td><td class="num">0.549</td><td class="num">0.816</td><td class="num">0.873</td><td class="num">3.60</td><td class="num">1.16</td></tr>
+      </tbody>
+      <caption><strong>Table 3.</strong> MATH-500, max response 12,288 tokens. Sweeping temperature on the RLVR-trained checkpoint traces an accuracy–diversity Pareto frontier; stacking LogitMLP on top strictly dominates every point on it.</caption>
+    </table>
+  </div>
+
+  <p>Stacking LogitMLP on top of the RLVR checkpoint <em>strictly dominates the entire temperature sweep</em>: best@1 (0.549) is higher than the highest best@1 in the sweep ($T = 0.5$, 0.492); best@8 (0.873) is higher than the highest best@8 in the sweep ($T = 1.5$, 0.818); average unique correct solutions and answer entropy are both higher than the most exploratory temperature setting. The figure at the top of this post visualizes this dominance.</p>
+
+  <p>A learned, token-adaptive policy can sharpen at well-calibrated positions while injecting exploration only at positions where the diversity is actually beneficial. This is the kind of behavior a scalar cannot reach.</p>
+
+  <h3>Finding 4: Where LogitMLP fires, and what it does there</h3>
+
+  <p>Findings 1–3 say <em>that</em> LogitMLP works. What is the trained head actually doing? We teacher-force both variants on 80 base-model rollouts (~48K positions on MATH-500) and ask where the head moves the base distribution. At over 95% of positions, it leaves the base untouched — $\mathrm{KL}(\text{warp}\,\Vert\,\text{base}) < 10^{-5}$. The action concentrates on a small <em>active set</em>: 1.1% of positions for pass@1 LogitMLP, 6.7% for pass@$k$. We highlight similar results for Llama in the paper. </p>
+
+  <p>That active set is <em>not</em> the high-entropy tail. It is the subset of <em>moderately</em> confident positions (base top-1 prob ≈ 0.3–0.85), where the model has narrowed to a few candidate strategies but has not yet committed. The tokens the base assigns mass to there — <em>use, find, let, given, compute, consider</em> — are reasoning-step-initial words in both variants. The head leaves routine tokens alone and spends its KL budget at the forks.</p>
+
+  <figure>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: end;">
+      <div>
+        <img src="bair_blog_assets/12_branching_wordcloud_dapo.png" alt="Branching tokens, pass@1 LogitMLP" style="width:100%; display:block; border:1px solid var(--rule); border-radius:3px;" />
+        <div style="font-family:var(--sans); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; text-align:center; color:var(--ink-soft); margin-top:6px;">LogitMLP (pass@1)</div>
+      </div>
+      <div>
+        <img src="bair_blog_assets/12_branching_wordcloud_passk.png" alt="Branching tokens, pass@k LogitMLP" style="width:100%; display:block; border:1px solid var(--rule); border-radius:3px;" />
+        <div style="font-family:var(--sans); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; text-align:center; color:var(--ink-soft); margin-top:6px;">LogitMLP (pass@$k$)</div>
+      </div>
+    </div>
+    <figcaption><strong>Figure 4.</strong> Tokens chosen by the base model at LogitMLP-active positions ($\mathrm{KL} > 0.05$), aggregated over 80 rollouts. Both variants concentrate on words that introduce a new reasoning step — <em>use, find, let, given, compute, consider</em> — rather than on punctuation, mid-word continuations, or high-entropy "wide-open" tokens. The high-leverage positions are <em>structural choice points</em>, where the model has to commit to a strategy for the next step.</figcaption>
+  </figure>
+
+  <p>What does the head do once it's there? For each active position we sweep a global temperature $T$ on the base logits and pick the $T^\star_t$ that best matches the warped distribution — a per-position scalar summary of the warp's direction and magnitude. $T^\star < 1$ means the head <em>sharpened</em> the base at that position; $T^\star > 1$ means it <em>flattened</em>.</p>
+
+  <figure>
+    <img src="bair_blog_assets/11_per_token_T_distribution_top.png" alt="Per-token effective temperature, pass@1 vs pass@k LogitMLP" style="width:100%; display:block; border:1px solid var(--rule); border-radius:3px;" />
+    <figcaption><strong>Figure 5.</strong> Distribution of per-token effective temperatures $T^\star_t$ across active positions, for pass@1 (left) and pass@$k$ (right) LogitMLP. Dotted line at $T^\star = 1$ marks the identity (no warp); the dashed red line marks each head's best <em>single global</em> temperature. Pass@1's distribution is narrow and centered just below 1, with a thin right tail of extreme flatteners. Pass@$k$'s is wider and visibly bimodal: a sharpening mode near $T^\star \approx 0.65$ and a flattening mode near $T^\star \approx 1.2$.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="widget qual-widget" id="qualitative-widget">
+      <div class="head">
+        <h4>Figure 6 · LogitMLP at real reasoning forks</h4>
+        <p class="lead">Top-6 candidate tokens under the base distribution and after the LogitMLP transform, at the highest-KL moderate-confidence positions from 80 Qwen3-1.7B rollouts on math problems. Toggle between the two variants.</p>
+      </div>
+    </div>
+  </figure>
+
+  <p>This is also consistent with — and complementary to — recent findings that RLVR's effective signal concentrates on a small minority of decision tokens at forks in the reasoning trace, rather than spreading uniformly across the trajectory. Those analyses look at the <em>training side</em> — which positions accumulate the gradient norm during full RLVR. We arrive at the same sparsity picture from the opposite end: with every weight in the stack frozen, a tiny last-layer warp still spends nearly all of its KL on the same kind of position (Figure 4). Two very different measurement instruments — gradient flow during training vs. decode-time output reshaping with a frozen base — independently localize RLVR's work to the same sparse subset of fork tokens, which is stronger evidence for the underlying claim than either result on its own.</p>
+
+  <hr class="sectrule" />
+
+  <h2>Discussion: a calibration story</h2>
+
+  <p>After we wrote the paper, we ran the same recipe on a third model family and got a result we did not expect. Alongside our results for Llama 3.2 (see paper), it points to a larger picture.</p>
+
+  <h3>Gemma-3-1B: LogitMLP barely moves the needle</h3>
+
+  <p>We re-ran the exact pipeline on Gemma-3-1B. We found LogitMLP closed essentially none of the gap between the base model and full-parameter RLVR on MATH-500, gaining roughly a percentage point on best@1 and a comparably small amount on best@8. </p>
+
+  <p>LogitMLP is strictly more expressive and should do at least as well as a global temperature, so we swept temperature as a sanity check. The same range that lifts Qwen by ~10 points on best@$k$ between $T = 0.5$ and $T = 1.5$ moves Gemma almost not at all:</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>$T$</th>
+          <th class="num">Mean acc.</th>
+          <th class="num">Best@8</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="lbl">$T = 0.3$</td><td class="num">0.374</td><td class="num">0.602</td></tr>
+        <tr><td class="lbl">$T = 0.5$</td><td class="num">0.374</td><td class="num">0.612</td></tr>
+        <tr><td class="lbl">$T = 0.7$</td><td class="num">0.375</td><td class="num">0.618</td></tr>
+        <tr><td class="lbl">$T = 1.0$</td><td class="num">0.372</td><td class="num">0.625</td></tr>
+        <tr><td class="lbl">$T = 1.3$</td><td class="num">0.371</td><td class="num">0.616</td></tr>
+        <tr><td class="lbl">$T = 1.5$</td><td class="num">0.371</td><td class="num">0.605</td></tr>
+      </tbody>
+      <caption><strong>Table 4.</strong> Gemma-3-1B (Chat) on MATH-500 across a temperature sweep. Mean accuracy stays within a $\pm 0.003$ band (0.371–0.374) across the sweep; best@8 within a 1.6-point band (0.602–0.625). For comparison, the same sweep on Qwen3-1.7B traces a ~10-point best@$k$ range (see Table 3 and the hero figure).</caption>
+    </table>
+  </div>
+
+  <p>Temperature on Gemma-3-1B is not slightly worse than on Qwen — it is functionally inert. Whatever decode-time slack the global $T$ knob exploits on Qwen, Gemma does not have. And if a flexible, token-adaptive transform like LogitMLP cannot find lift either, then the kind of headroom we're after simply isn't at the output layer for this model.</p>
+
+  <h3>Different models, opposite directions, same correction</h3>
+
+  <p>That non-result pushed us to look back at the models where LogitMLP <em>does</em> work and ask, mechanically, what part of the distribution does the trained head spend its KL budget on? Two clean patterns emerge:</p>
+
+  <figure>
+    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg">
+      <rect width="720" height="320" fill="#fdfbf6"/>
+      <text x="360" y="22" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="14" fill="#5b6478">Where the warp spends its KL at active positions</text>
+      <defs>
+        <pattern id="qgrid_fig8" width="40" height="36" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 36" fill="none" stroke="#ede4ce" stroke-width="0.7"/>
+        </pattern>
+      </defs>
+
+      <!-- Panel 1: Qwen anti-overconfidence -->
+      <g transform="translate(50, 60)">
+        <text x="150" y="0" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="600" fill="#1b2230">Qwen3-1.7B · anti-overconfidence</text>
+        <text x="150" y="16" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="12" fill="#5b6478">head flattens an over-committed top-1</text>
+        <rect x="0" y="30" width="300" height="180" fill="url(#qgrid_fig8)"/>
+        <line x1="0" y1="210" x2="300" y2="210" stroke="#1b2230" stroke-width="1"/>
+        <line x1="0" y1="30" x2="0" y2="210" stroke="#1b2230" stroke-width="1"/>
+        <g font-family="IBM Plex Mono, monospace" font-size="9.5" fill="#8a91a0">
+          <text x="-5" y="213" text-anchor="end">0</text>
+          <text x="-5" y="124" text-anchor="end">0.5</text>
+          <text x="-5" y="35" text-anchor="end">1.0</text>
+        </g>
+
+        <!-- 7 tokens; pairs of (base, warp) bars -->
+        <!-- Base: 0.94, 0.03, 0.012, 0.008, 0.005, 0.003, 0.002 -->
+        <!-- Warp (flatten): 0.63, 0.18, 0.09, 0.06, 0.04, 0.03, 0.02 -->
+        <rect x="14" y="40.8" width="14" height="169.2" fill="#5b6478" opacity="0.6"/>
+        <rect x="30" y="96.6" width="14" height="113.4" fill="#b84a2c"/>
+        <rect x="54" y="204.6" width="14" height="5.4" fill="#5b6478" opacity="0.6"/>
+        <rect x="70" y="177.6" width="14" height="32.4" fill="#b84a2c"/>
+        <rect x="94" y="207.84" width="14" height="2.16" fill="#5b6478" opacity="0.6"/>
+        <rect x="110" y="193.8" width="14" height="16.2" fill="#b84a2c"/>
+        <rect x="134" y="208.56" width="14" height="1.44" fill="#5b6478" opacity="0.6"/>
+        <rect x="150" y="199.2" width="14" height="10.8" fill="#b84a2c"/>
+        <rect x="174" y="209.1" width="14" height="0.9" fill="#5b6478" opacity="0.6"/>
+        <rect x="190" y="202.8" width="14" height="7.2" fill="#b84a2c"/>
+        <rect x="214" y="209.46" width="14" height="0.54" fill="#5b6478" opacity="0.6"/>
+        <rect x="230" y="204.6" width="14" height="5.4" fill="#b84a2c"/>
+        <rect x="254" y="209.64" width="14" height="0.36" fill="#5b6478" opacity="0.6"/>
+        <rect x="270" y="206.4" width="14" height="3.6" fill="#b84a2c"/>
+
+        <text x="200" y="72" font-family="EB Garamond, serif" font-style="italic" font-size="13" fill="#b84a2c">flatten head ↓</text>
+        <text x="150" y="240" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="#8a91a0">candidate token (rank-ordered)</text>
+      </g>
+
+      <!-- Panel 2: Llama anti-underconfidence -->
+      <g transform="translate(400, 60)">
+        <text x="150" y="0" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="600" fill="#1b2230">Llama-3.2-1B · anti-underconfidence</text>
+        <text x="150" y="16" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="12" fill="#5b6478">head sharpens a diffuse base onto the top</text>
+        <rect x="0" y="30" width="300" height="180" fill="url(#qgrid_fig8)"/>
+        <line x1="0" y1="210" x2="300" y2="210" stroke="#1b2230" stroke-width="1"/>
+        <line x1="0" y1="30" x2="0" y2="210" stroke="#1b2230" stroke-width="1"/>
+        <g font-family="IBM Plex Mono, monospace" font-size="9.5" fill="#8a91a0">
+          <text x="-5" y="213" text-anchor="end">0</text>
+          <text x="-5" y="124" text-anchor="end">0.5</text>
+          <text x="-5" y="35" text-anchor="end">1.0</text>
+        </g>
+
+        <!-- Base: 0.40, 0.20, 0.15, 0.10, 0.08, 0.05, 0.02 -->
+        <!-- Warp (sharpen): 0.90, 0.07, 0.024, 0.005, 0.002, 0.001, 0.0 -->
+        <rect x="14" y="138" width="14" height="72" fill="#5b6478" opacity="0.6"/>
+        <rect x="30" y="48" width="14" height="162" fill="#b84a2c"/>
+        <rect x="54" y="174" width="14" height="36" fill="#5b6478" opacity="0.6"/>
+        <rect x="70" y="197.4" width="14" height="12.6" fill="#b84a2c"/>
+        <rect x="94" y="183" width="14" height="27" fill="#5b6478" opacity="0.6"/>
+        <rect x="110" y="205.68" width="14" height="4.32" fill="#b84a2c"/>
+        <rect x="134" y="192" width="14" height="18" fill="#5b6478" opacity="0.6"/>
+        <rect x="150" y="209.1" width="14" height="0.9" fill="#b84a2c"/>
+        <rect x="174" y="195.6" width="14" height="14.4" fill="#5b6478" opacity="0.6"/>
+        <rect x="190" y="209.64" width="14" height="0.36" fill="#b84a2c"/>
+        <rect x="214" y="201" width="14" height="9" fill="#5b6478" opacity="0.6"/>
+        <rect x="230" y="209.8" width="14" height="0.2" fill="#b84a2c"/>
+        <rect x="254" y="206.4" width="14" height="3.6" fill="#5b6478" opacity="0.6"/>
+        <rect x="270" y="209.9" width="14" height="0.1" fill="#b84a2c"/>
+
+        <text x="190" y="72" font-family="EB Garamond, serif" font-style="italic" font-size="13" fill="#b84a2c">sharpen head ↑</text>
+        <text x="150" y="240" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="#8a91a0">candidate token (rank-ordered)</text>
+      </g>
+
+      <!-- Bottom legend -->
+      <g transform="translate(290, 290)">
+        <rect x="0" y="0" width="14" height="10" fill="#5b6478" opacity="0.6"/>
+        <text x="20" y="9" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#5b6478">base</text>
+        <rect x="100" y="0" width="14" height="10" fill="#b84a2c"/>
+        <text x="120" y="9" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#5b6478">+ LogitMLP</text>
+      </g>
+    </svg>
+    <figcaption><strong>Figure 7.</strong> Two representative active-position behaviors. <em>Left:</em> at an extreme-confidence Qwen3-1.7B position ($p_{\text{top-1}} \approx 0.94$), the pass@1 LogitMLP walks the top-1 mass down to ≈0.63 — the anti-overconfidence direction. <em>Right:</em> at a moderate-confidence Llama-3.2-1B position ($p_{\text{top-1}} \approx 0.40$), every trained Llama head concentrates mass onto the top candidate to ≈0.90 — the anti-underconfidence direction. Mechanically opposite, but unified as corrections toward the well-calibrated middle. (On Qwen, pass@$k$ reverses the action at this kind of position and sharpens instead; on Llama, every objective sharpens.)</figcaption>
+  </figure>
+
+  <p>These are mechanically opposite operations. The unifying lens is that <em>both</em> are corrections — toward whatever the well-calibrated distribution at a math-reasoning fork looks like: confident enough to commit when there's a clear best strategy, diffuse enough to leave probability on alternatives when there isn't. Llama sits unambiguously on the under-confident side of that middle; Qwen sits far enough on the over-confident side that <em>multiple</em> directions of correction look reasonable to the optimizer, and different objectives find different mixes. In both cases the head learns to pull the base toward the calibrated middle.</p>
+
+  <h3>It was calibration all along</h3>
+
+  <p>Temperature works because the output distribution is miscalibrated. LogitMLP works <em>better than temperature</em> because miscalibration is not the same shape at every token, and a single scalar cannot correct a token-conditional miscalibration. And both fail on Gemma-3-1B because Gemma's base output distribution is already well-calibrated — there is no decode-time headroom to find.</p>
+
+  <p>This is consistent with two well-documented properties of small post-trained models. Preference-based fine-tuning procedures (RLHF, DPO, and relatives) are known to <em>degrade</em> the calibration of the underlying LM — they sharpen the policy in ways that do not match the underlying answer-probability surface. And smaller base models exhibit systematically worse calibration than larger ones. Both apply to Qwen3-1.7B and Llama-3.2-1B. Gemma-3-1B is, anecdotally, an exception on the calibration axis among small chat models, reflecting deliberate post-training choices — and that exception predicts the inertness we observe.</p>
+
+  <p>Roughly, temperature is "fixing" some measure of calibration, and LogitMLP fixes it better — if there is anything to be fixed at all, which is not always the case (e.g., for Gemma).</p>
+
+  <h3>Limitations and outlook</h3>
+
+  <p>Our experiments span the 1–2B scale across three model families. Whether the same calibration-headroom fraction holds for substantially larger models is genuinely uncertain — larger models tend to be better-calibrated out of the box, and the calibration-shaped portion of RLVR's lift may shrink with scale. We also evaluate primarily on math, where rewards are easy to verify; calibration on open-ended generation is its own object and may behave differently. The piecewise-linear family is intentionally minimal — richer monotonic families (neural splines, more pieces) would let the transform express finer-grained reshaping, and on miscalibrated models that extra capacity might pay. Conditioning only on the current hidden state misses any trajectory-level cue like "we're about to commit to a wrong calculation here," which a recurrent or attention-based controller could in principle pick up.</p>
+
+  <p>The most exciting direction for us is interpretability. The trained policy is a function from hidden states to slopes and breakpoints — examining which hidden-state directions, logit statistics, or token classes drive its decisions could let us extract a simpler, more interpretable mechanistic decoding rule, or even read the calibration correction off directly and feed it back into pre- or post-training as a regularizer. The policy is small enough to make this feasible.</p>
+
+  <p>More broadly: as base models grow and full fine-tuning becomes prohibitive for downstream users, learning and interpreting <em>inference-time output transformations</em> on top of a frozen base looks increasingly attractive. They're cheap, compositional with any other adapter, and hot-swappable at deployment. If our reading of the calibration story is right, they are also a measurement instrument — a way to ask, of any base model, how much of its remaining-to-be-learned task knowledge is actually just remaining-to-be-corrected calibration.</p>
+
+  <hr class="sectrule" />
+
+  <h2>Acknowledgements</h2>
+
+  <p>This project began as a final project for UC Berkeley's EE194 (Scalable AI) course, and would not have happened without it. We are grateful to Professors Anant Sahai and Jiantao Jiao for designing a class that gave us both the technical foundations and the freedom to pursue an open-ended research direction, and to TAs Haocheng Xi and Paul Zhiyuan Zhou for their guidance, feedback, and patience throughout the semester. We also thank NVIDIA, who sponsors the course and provided the 8×H100 compute node on which essentially every experiment in this post was run. Many of the ablations and qualitative analyses here are direct consequences of being able to iterate quickly on real RLVR runs; we are very lucky to have that resource available to a class project.</p>
+
+  <p>The full paper, project page, and code will be linked here once the anonymous review period concludes.</p>
+
+  <!-- Footnotes -->
+  <div class="footnotes">
+    <ol>
+      <li id="fn1">
+        DAPO (Yu et al., 2025) is a GRPO-derived RLVR objective with no KL penalty, decoupled clipping thresholds ("clip-higher"), and dynamic sampling that discards all-correct and all-incorrect rollout groups. <a href="#ref1">↩</a>
+      </li>
+    </ol>
+  </div>
+
+  <!-- Citation -->
+  <h2>Citation</h2>
+  <div class="citation">
+<pre><code>@article{2026logitmlp,
+  title  = {Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR},
+  author = {Anonymous},
+  year   = {2026},
+  eprint = {2505.XXXXX},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url    = {https://arxiv.org/abs/2505.XXXXX}
+}</code></pre>
+  </div>
+
+</article>
+
+<script>
+  // ---------- Interactive widget: transform + softmax probabilities ----------
+  const LOGITS = [9.5, 8.8, 7.2, 6.3, 5.4, 4.2, 3.0, 2.1, 1.0, 0.2, -0.5, -1.2];
+  const X_MIN = -3, X_MAX = 11;
+
+  const PRESETS = {
+    identity:   { s1: 1.00, s2: 1.00, b: 4.00 },
+    temp_low:   { s1: 2.00, s2: 2.00, b: 4.00 },
+    temp_high:  { s1: 0.50, s2: 0.50, b: 4.00 },
+    topk:       { s1: 0.30, s2: 1.40, b: 7.80 },
+    anti:       { s1: 1.20, s2: 0.40, b: 8.60 }
+  };
+
+  function f(l, s1, s2, b) {
+    return s1 * l + (s2 - s1) * Math.max(0, l - b);
+  }
+  function softmax(arr) {
+    const m = Math.max(...arr);
+    const ex = arr.map(x => Math.exp(x - m));
+    const sum = ex.reduce((a, b) => a + b, 0);
+    return ex.map(x => x / sum);
+  }
+  function niceStep(range) {
+    const raw = range / 5;
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const norm = raw / mag;
+    let step;
+    if (norm < 1.5) step = 1;
+    else if (norm < 3) step = 2;
+    else if (norm < 7) step = 5;
+    else step = 10;
+    return step * mag;
+  }
+
+  const TPL = { W: 460, H: 270, ML: 46, MR: 14, MT: 14, MB: 32 };
+  TPL.PW = TPL.W - TPL.ML - TPL.MR;
+  TPL.PH = TPL.H - TPL.MT - TPL.MB;
+
+  const PPL = { W: 460, H: 270, ML: 46, MR: 14, MT: 14, MB: 32 };
+  PPL.PW = PPL.W - PPL.ML - PPL.MR;
+  PPL.PH = PPL.H - PPL.MT - PPL.MB;
+
+  function renderTransform(s1, s2, b) {
+    const candidates = [
+      f(X_MIN, s1, s2, b),
+      f(X_MAX, s1, s2, b),
+      f(b, s1, s2, b),
+      X_MIN, X_MAX
+    ];
+    let yMin = Math.min(...candidates);
+    let yMax = Math.max(...candidates);
+    const range = Math.max(yMax - yMin, 4);
+    yMin -= range * 0.08;
+    yMax += range * 0.08;
+
+    const xScale = x => TPL.ML + (x - X_MIN) / (X_MAX - X_MIN) * TPL.PW;
+    const yScale = y => TPL.MT + (1 - (y - yMin) / (yMax - yMin)) * TPL.PH;
+
+    let svg = '';
+
+    const yStep = niceStep(yMax - yMin);
+    for (let v = Math.ceil(yMin / yStep) * yStep; v <= yMax; v += yStep) {
+      svg += `<line class="grid-line" x1="${TPL.ML}" x2="${TPL.ML + TPL.PW}" y1="${yScale(v)}" y2="${yScale(v)}"/>`;
+      svg += `<text x="${TPL.ML - 6}" y="${yScale(v) + 3}" text-anchor="end">${v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)}</text>`;
+    }
+    const xTicks = [-2, 0, 2, 4, 6, 8, 10];
+    xTicks.forEach(x => {
+      if (x >= X_MIN && x <= X_MAX) {
+        svg += `<line class="grid-line" x1="${xScale(x)}" x2="${xScale(x)}" y1="${TPL.MT}" y2="${TPL.MT + TPL.PH}"/>`;
+        svg += `<text x="${xScale(x)}" y="${TPL.MT + TPL.PH + 13}" text-anchor="middle">${x}</text>`;
+      }
+    });
+
+    svg += `<text class="plot-label" x="${TPL.ML + TPL.PW / 2}" y="${TPL.H - 4}" text-anchor="middle">logit ℓ</text>`;
+    svg += `<text class="plot-label" x="${10}" y="${TPL.MT + TPL.PH / 2}" text-anchor="middle" transform="rotate(-90 10 ${TPL.MT + TPL.PH / 2})">f(ℓ)</text>`;
+
+    svg += `<line class="identity-line" x1="${xScale(X_MIN)}" y1="${yScale(X_MIN)}" x2="${xScale(X_MAX)}" y2="${yScale(X_MAX)}"/>`;
+
+    let path;
+    if (b <= X_MIN || b >= X_MAX) {
+      path = `M ${xScale(X_MIN)} ${yScale(f(X_MIN, s1, s2, b))} L ${xScale(X_MAX)} ${yScale(f(X_MAX, s1, s2, b))}`;
+    } else {
+      path = `M ${xScale(X_MIN)} ${yScale(f(X_MIN, s1, s2, b))} ` +
+             `L ${xScale(b)} ${yScale(f(b, s1, s2, b))} ` +
+             `L ${xScale(X_MAX)} ${yScale(f(X_MAX, s1, s2, b))}`;
+    }
+    svg += `<path class="transform-curve" d="${path}"/>`;
+
+    if (b > X_MIN && b < X_MAX) {
+      const bx = xScale(b);
+      const by = yScale(f(b, s1, s2, b));
+      svg += `<line class="breakpoint-guide" x1="${bx}" y1="${by}" x2="${bx}" y2="${TPL.MT + TPL.PH}"/>`;
+      svg += `<circle class="breakpoint-marker" cx="${bx}" cy="${by}" r="4.5"/>`;
+      const labelRight = bx + 8 < TPL.ML + TPL.PW - 50;
+      const lx = labelRight ? bx + 8 : bx - 8;
+      const anchor = labelRight ? 'start' : 'end';
+      svg += `<text class="breakpoint-label" x="${lx}" y="${by - 7}" text-anchor="${anchor}">b = ${b.toFixed(2)}</text>`;
+    }
+
+    document.getElementById('transform-svg').innerHTML = svg;
+  }
+
+  function renderProbs(s1, s2, b) {
+    const origP = softmax(LOGITS);
+    const newL = LOGITS.map(l => f(l, s1, s2, b));
+    const newP = softmax(newL);
+    const maxP = Math.max(...origP, ...newP, 0.1) * 1.08;
+
+    const N = LOGITS.length;
+    const slotW = PPL.PW / N;
+    const barW = slotW * 0.38;
+    const gap = slotW * 0.04;
+
+    const yScale = p => PPL.MT + (1 - p / maxP) * PPL.PH;
+
+    let svg = '';
+    const yStep = niceStep(maxP);
+    for (let v = 0; v <= maxP + 1e-9; v += yStep) {
+      svg += `<line class="grid-line" x1="${PPL.ML}" x2="${PPL.ML + PPL.PW}" y1="${yScale(v)}" y2="${yScale(v)}"/>`;
+      svg += `<text x="${PPL.ML - 6}" y="${yScale(v) + 3}" text-anchor="end">${v.toFixed(2)}</text>`;
+    }
+
+    for (let i = 0; i < N; i++) {
+      const cx = PPL.ML + (i + 0.5) * slotW;
+      const oX = cx - barW - gap / 2;
+      const nX = cx + gap / 2;
+      const oH = PPL.MT + PPL.PH - yScale(origP[i]);
+      const nH = PPL.MT + PPL.PH - yScale(newP[i]);
+      svg += `<rect class="bar-orig" x="${oX}" y="${yScale(origP[i])}" width="${barW}" height="${Math.max(oH, 0)}"/>`;
+      svg += `<rect class="bar-new"  x="${nX}" y="${yScale(newP[i])}" width="${barW}" height="${Math.max(nH, 0)}"/>`;
+      if (i % 2 === 0 || i === N - 1) {
+        svg += `<text x="${cx}" y="${PPL.MT + PPL.PH + 13}" text-anchor="middle">${i + 1}</text>`;
+      }
+    }
+
+    svg += `<text class="plot-label" x="${PPL.ML + PPL.PW / 2}" y="${PPL.H - 4}" text-anchor="middle">token (rank-ordered)</text>`;
+    svg += `<text class="plot-label" x="${10}" y="${PPL.MT + PPL.PH / 2}" text-anchor="middle" transform="rotate(-90 10 ${PPL.MT + PPL.PH / 2})">probability</text>`;
+
+    document.getElementById('prob-svg').innerHTML = svg;
+  }
+
+  function checkActivePreset(s1, s2, b) {
+    let active = null;
+    for (const [k, v] of Object.entries(PRESETS)) {
+      if (Math.abs(v.s1 - s1) < 0.011 && Math.abs(v.s2 - s2) < 0.011 && Math.abs(v.b - b) < 0.06) {
+        active = k;
+        break;
+      }
+    }
+    document.querySelectorAll('.presets button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.preset === active);
+    });
+  }
+
+  function update() {
+    const s1 = parseFloat(document.getElementById('s1').value);
+    const s2 = parseFloat(document.getElementById('s2').value);
+    const b  = parseFloat(document.getElementById('b').value);
+    document.getElementById('s1-val').textContent = s1.toFixed(2);
+    document.getElementById('s2-val').textContent = s2.toFixed(2);
+    document.getElementById('b-val').textContent  = b.toFixed(2);
+    renderTransform(s1, s2, b);
+    renderProbs(s1, s2, b);
+    checkActivePreset(s1, s2, b);
+  }
+
+  document.querySelectorAll('.presets button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = PRESETS[btn.dataset.preset];
+      document.getElementById('s1').value = p.s1;
+      document.getElementById('s2').value = p.s2;
+      document.getElementById('b').value  = p.b;
+      update();
+    });
+  });
+  ['s1', 's2', 'b'].forEach(id => {
+    document.getElementById(id).addEventListener('input', update);
+  });
+
+  update();
+</script>
+
+<script>
+  // ---------- Figure 6: qualitative examples widget ----------
+  (function () {
+    "use strict";
+    const root = document.getElementById("qualitative-widget");
+    if (!root) return;
+
+    function fmt(x, n) {
+      if (n === undefined) n = 3;
+      if (!isFinite(x)) return "—";
+      if (Math.abs(x) >= 100) return x.toFixed(0);
+      return x.toFixed(n);
+    }
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+      }[m]));
+    }
+
+    // Embedded JSON data (inline so the widget works under file:// without an HTTP server).
+    const data = {"pl_warp_dapo":[{"global_pos":16435,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nFour unit squares form a $2\\times 2$ grid. Each of the $12$ unit line segments forming the sides of the squares is colored either red or blue in such a way that each unit square has $2$ red sides and $2$ blue sides. One example is shown below (red is solid, blue is dashed). Find the number of such colorings.\n\n\\begin{tikz","pre":" affects the squares:\n\n---\n\n### Step 3: Consider the","chosen":" Example","post":"\n\nFrom","kl":0.22930487990379333,"entropy_base":1.6270285844802856,"top1_base":0.6933389902114868,"s1":0.83203125,"s2":0.76953125,"b":13.4375,"base_top":[[" Example",0.6933416128158569],[" Grid",0.06449081748723984],[" Sym",0.03046330437064171],[" ",0.03046330437064171],[" Possible",0.023724844679236412],[" Structure",0.01630583219230175]],"warp_top":[[" Example",0.4323289692401886],[" Grid",0.075127512216568],[" Sym",0.040212858468294144],[" ",0.040212858468294144],[" Possible",0.031317807734012604],[" Given",0.02439033053815365]]},{"global_pos":13495,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nThe product\n$$\\prod_{k=4}^{63} \\frac{\\log_k \\left(5^{k^2 - 1}\\right)}{\\log_{k+1} \\left(5^{k^2 - 4}\\right)} = \\frac{\\log_4 (5^{15})}{\\log_5 (5^{12})} \\cdot \\frac{\\log_5 (5^{24})}{\\log_6 (5^{21})} \\cdot \\frac{\\log_6 (5^{35})}{\\log_7 (5^{32})} \\dots \\frac{\\log_{63} (5^{3968})}{\\log_{64} (5^{3965})}$$\nis equal to $\\frac{m}{n","pre":", say base 5.\n\n---\n\n### Step 2:","chosen":" Simpl","post":"ify Each","kl":0.10264120995998383,"entropy_base":0.9111172556877136,"top1_base":0.787785530090332,"s1":0.9453125,"s2":0.765625,"b":19.875,"base_top":[[" Simpl",0.7877857089042664],[" Rewrite",0.09408758580684662],[" Analy",0.05706700682640076],[" Use",0.014428801834583282],[" Express",0.011237159371376038],[" Apply",0.006815681699663401]],"warp_top":[[" Simpl",0.6261907815933228],[" Rewrite",0.12330428510904312],[" Analy",0.08474571257829666],[" Express",0.02428005076944828],[" Use",0.02428005076944828],[" Apply",0.01668741926550865]]},{"global_pos":10725,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $ABCDE$ be a convex pentagon with $AB=14, BC=7, CD=24, DE=13, EA=26,$ and $\\angle B=\\angle E=60^\\circ$. For each point $X$ in the plane, define $f(X)=AX+BX+CX+DX+EX$. The least possible value of $f(X)$ can be expressed as $m+n\\sqrt{p}$, where $m$ and $n$ are positive integers and $p$ is not divisible by the square of","pre":" in the interior.\n\n---\n\n### Step 2: Use the","chosen":" Triangle","post":" Inequality","kl":0.08648863434791565,"entropy_base":1.9175567626953125,"top1_base":0.45356684923171997,"s1":0.859375,"s2":0.8203125,"b":13.0625,"base_top":[[" **",0.4535679519176483],[" Concept",0.18907524645328522],[" Triangle",0.1299493908882141],[" Reflection",0.06955689936876297],[" Geometry",0.02558855339884758],[" Method",0.02258181758224964]],"warp_top":[[" **",0.3222292959690094],[" Concept",0.17247691750526428],[" Triangle",0.13432517647743225],[" Reflection",0.08147233724594116],[" Geometry",0.03396271541714668],[" Method",0.02997199445962906]]},{"global_pos":15118,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $k$ be real numbers such that the system $|25+20i-z|=5$ and $|z-4-k|=|z-3i-k|$ has exactly one complex solution $z$. The sum of all possible values of $k$ can be written as $\\frac{m}{n}$, where $m$ and $n$ are relatively prime positive integers. Find $m+n$. Here $i=\\sqrt{-1}$.\n\nRemember to put your answer on its own ","pre":": Combine the Two Equations\n\nLet’s denote:\n\n-","chosen":" $","post":" A =","kl":0.07895086705684662,"entropy_base":0.8491578102111816,"top1_base":0.7524532079696655,"s1":0.74609375,"s2":0.7265625,"b":20.375,"base_top":[[" $",0.7524533867835999],[" Point",0.13075679540634155],[" Circle",0.07930800318717957],[" Center",0.02005220390856266],[" The",0.012162276543676853],[" A",0.0016459851758554578]],"warp_top":[[" $",0.6052768230438232],[" Point",0.17341472208499908],[" Circle",0.11918608099222183],[" Center",0.04384610801935196],[" The",0.030134957283735275],[" A",0.006724018137902021]]},{"global_pos":4353,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $S$ be the set of vertices of a regular $24$-gon. Find the number of ways to draw $12$ segments of equal lengths so that each vertex in $S$ is an endpoint of exactly one of the $12$ segments.\n\nRemember to put your answer on its own line after \"Answer:\".","pre":"4).\n\n---\n\n### Step 4: Count the Number of","chosen":" Valid","post":" Matchings","kl":0.06327764689922333,"entropy_base":0.942510187625885,"top1_base":0.6563665866851807,"s1":0.8671875,"s2":0.77734375,"b":16.625,"base_top":[[" Valid",0.656367301940918],[" Such",0.2736145853996277],[" Step",0.025450121611356735],[" Match",0.019820574671030045],[" Possible",0.012021786533296108],[" Matching",0.004422568250447512]],"warp_top":[[" Valid",0.550635576248169],[" Such",0.29473400115966797],[" Step",0.045198921114206314],[" Match",0.03520095348358154],[" Possible",0.024193238466978073],[" Matching",0.011428073979914188]]},{"global_pos":6101,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $x_1, x_2, x_3, \\ldots$ be a sequence of rational numbers defined by $x_1 = \\frac{25}{11}$ and\n$$x_{k+1} = \\frac{1}{3}\\left(x_k + \\frac{1}{x_k} - 1\\right)$$\nfor all $k \\ge 1$. Then $x_{2025}$ can be expressed as $\\frac{m}{n}$, where $m$ and $n$ are relatively prime positive integers. Find the remainder when $m + n$ i","pre":"3 $ in more detail.\n\n---\n\n### Step 3:","chosen":" Try","post":" to find","kl":0.05908970534801483,"entropy_base":2.1680378913879395,"top1_base":0.3671858310699463,"s1":0.8984375,"s2":0.859375,"b":16.75,"base_top":[[" Try",0.36718735098838806],[" Compute",0.2523639500141144],[" Use",0.1530664563179016],[" Simpl",0.043854277580976486],[" Check",0.020715292543172836],[" Find",0.016133086755871773]],"warp_top":[[" Try",0.2984790503978729],[" Compute",0.20514145493507385],[" Use",0.14099152386188507],[" Simpl",0.05186787247657776],[" Check",0.02450065314769745],[" Find",0.02162175066769123]]},{"global_pos":627,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nThe equation\n\\[x^{10}+(13x-1)^{10}=0\\,\\]has 10 complex roots $r_1,$ $\\overline{r}_1,$ $r_2,$ $\\overline{r}_2,$ $r_3,$ $\\overline{r}_3,$ $r_4,$ $\\overline{r}_4,$ $r_5,$ $\\overline{r}_5,$ where the bar denotes complex conjugation. Find the value of\n\\[\\frac 1{r_1\\overline{r}_1}+\\frac 1{r_2\\overline{r}_2}+\\frac 1{r_3\\overlin","pre":" squares of their magnitudes.\n\n---\n\n### Step 3:","chosen":" Use","post":" the polynomial","kl":0.057095594704151154,"entropy_base":1.222434401512146,"top1_base":0.717708945274353,"s1":0.91015625,"s2":0.83203125,"b":20.0,"base_top":[[" Use",0.7177097201347351],[" Solve",0.06675740331411362],[" Analy",0.058913201093673706],[" Find",0.04588164761662483],[" Simpl",0.035732660442590714],[" Let",0.03153396397829056]],"warp_top":[[" Use",0.5907250642776489],[" Solve",0.07994594424962997],[" Analy",0.0705520510673523],[" Simpl",0.054945994168519974],[" Find",0.054945994168519974],[" Let",0.04848966747522354]]},{"global_pos":6504,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nOn $\\triangle ABC$ points $A,D,E$, and $B$ lie that order on side $\\overline{AB}$ with $AD=4, DE=16$, and $EB=8$. Points $A,F,G$, and $C$ lie in that order on side $\\overline{AC}$ with $AF=13, FG=52$, and $GC=26$. Let $M$ be the reflection of $D$ through $F$, and let $N$ be the reflection of $G$ through $E$. Quadrilatera","pre":" not directly useful for area.\n\n---\n\n### Step 3:","chosen":" Use","post":" area of","kl":0.05433198809623718,"entropy_base":0.9736608266830444,"top1_base":0.7729087471961975,"s1":0.921875,"s2":0.8359375,"b":20.5,"base_top":[[" Use",0.7729093432426453],[" Area",0.1046019047498703],[" Analy",0.038480889052152634],[" Consider",0.02644750289618969],[" Find",0.014156331308186054],[" Focus",0.009729492478072643]],"warp_top":[[" Use",0.6512748003005981],[" Area",0.1282436102628708],[" Analy",0.05345989018678665],[" Consider",0.04163460433483124],[" Find",0.02525266446173191],[" Focus",0.017355889081954956]]}],"pl_warp_passk":[{"global_pos":1495,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nThe equation\n\\[x^{10}+(13x-1)^{10}=0\\,\\]has 10 complex roots $r_1,$ $\\overline{r}_1,$ $r_2,$ $\\overline{r}_2,$ $r_3,$ $\\overline{r}_3,$ $r_4,$ $\\overline{r}_4,$ $r_5,$ $\\overline{r}_5,$ where the bar denotes complex conjugation. Find the value of\n\\[\\frac 1{r_1\\overline{r}_1}+\\frac 1{r_2\\overline{r}_2}+\\frac 1{r_3\\overlin","pre":"_5 $.\n\n---\n\n### Step 3: Use the","chosen":" given","post":" equation\n\n","kl":0.295434832572937,"entropy_base":1.9829717874526978,"top1_base":0.4158511757850647,"s1":1.1640625,"s2":2.09375,"b":25.125,"base_top":[[" original",0.4158518612384796],[" fact",0.22258947789669037],[" equation",0.07226421684026718],[" property",0.05627942830324173],[" properties",0.05627942830324173],[" polynomial",0.04383046180009842]],"warp_top":[[" original",0.7306235432624817],[" fact",0.20932716131210327],[" equation",0.0194704569876194],[" property",0.010421784594655037],[" properties",0.010421784594655037],[" polynomial",0.006321132183074951]]},{"global_pos":8145,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nSuppose the polynomial\n$$f(x) = a_nx^n + a_{n-1}x^{n-1} + \\cdots + a_2x^2 + a_1x + a_0$$has integer coefficients, and its roots are distinct integers.\n\nGiven that $a_n=2$ and $a_0=66$, what is the least possible value of $|a_{n-1}|$?\n\nRemember to put your answer on its own line after \"Answer:\".","pre":" two distinct integers $ r $ and $ s $, and","chosen":" $","post":" a_n","kl":0.275664359331131,"entropy_base":2.461517095565796,"top1_base":0.34572213888168335,"s1":1.2421875,"s2":1.875,"b":26.0,"base_top":[[" the",0.34572336077690125],[" try",0.16330814361572266],[" consider",0.07714129984378815],[" $",0.07714129984378815],[" suppose",0.046788569539785385],[" we",0.032157283276319504]],"warp_top":[[" the",0.6756508350372314],[" try",0.15075808763504028],[" consider",0.04319291189312935],[" $",0.04319291189312935],[" suppose",0.015889784321188927],[" we",0.009637640789151192]]},{"global_pos":6679,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nOn $\\triangle ABC$ points $A,D,E$, and $B$ lie that order on side $\\overline{AB}$ with $AD=4, DE=16$, and $EB=8$. Points $A,F,G$, and $C$ lie in that order on side $\\overline{AC}$ with $AF=13, FG=52$, and $GC=26$. Let $M$ be the reflection of $D$ through $F$, and let $N$ be the reflection of $G$ through $E$. Quadrilatera","pre":" the heptagon is formed from these points, we can","chosen":" find","post":" the total","kl":0.27490168809890747,"entropy_base":2.2463326454162598,"top1_base":0.48331817984580994,"s1":1.265625,"s2":2.1875,"b":26.375,"base_top":[[" use",0.4833201467990875],[" compute",0.12220247089862823],[" consider",0.08398845046758652],[" find",0.05094156786799431],[" calculate",0.027267057448625565],[" think",0.024063091725111008]],"warp_top":[[" use",0.8332663178443909],[" compute",0.053268931806087494],[" consider",0.032309241592884064],[" find",0.01959654688835144],[" calculate",0.008169054985046387],[" think",0.007209166418761015]]},{"global_pos":3726,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $S$ be the set of vertices of a regular $24$-gon. Find the number of ways to draw $12$ segments of equal lengths so that each vertex in $S$ is an endpoint of exactly one of the $12$ segments.\n\nRemember to put your answer on its own line after \"Answer:\".","pre":" all 24 vertices.\n\n---\n\n### Step 4:","chosen":" Count","post":" the number","kl":0.26205119490623474,"entropy_base":1.9582369327545166,"top1_base":0.4115855395793915,"s1":1.3515625,"s2":2.140625,"b":26.625,"base_top":[[" Count",0.4115864634513855],[" Determine",0.1514142006635666],[" Find",0.1514142006635666],[" How",0.11792150139808655],[" Consider",0.033785074949264526],[" Use",0.033785074949264526]],"warp_top":[[" Count",0.7556871771812439],[" Determine",0.07964883744716644],[" Find",0.07964883744716644],[" How",0.04830946400761604],[" Consider",0.010779297910630703],[" Use",0.010779297910630703]]},{"global_pos":5889,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $x_1, x_2, x_3, \\ldots$ be a sequence of rational numbers defined by $x_1 = \\frac{25}{11}$ and\n$$x_{k+1} = \\frac{1}{3}\\left(x_k + \\frac{1}{x_k} - 1\\right)$$\nfor all $k \\ge 1$. Then $x_{2025}$ can be expressed as $\\frac{m}{n}$, where $m$ and $n$ are relatively prime positive integers. Find the remainder when $m + n$ i","pre":"right)\n$$\n\nThis is complicated to compute directly, but","chosen":" notice","post":" that it","kl":0.24281728267669678,"entropy_base":2.1303210258483887,"top1_base":0.40944910049438477,"s1":1.203125,"s2":1.796875,"b":23.625,"base_top":[[" we",0.40945133566856384],[" let",0.1506287306547165],[" perhaps",0.13292938470840454],[" notice",0.0489019900560379],[" it",0.038084909319877625],[" maybe",0.038084909319877625]],"warp_top":[[" we",0.7191705703735352],[" let",0.12497308850288391],[" perhaps",0.0858926773071289],[" notice",0.014925912953913212],[" it",0.009053021669387817],[" maybe",0.009053021669387817]]},{"global_pos":1933,"prompt":"Solve the following math problem step by step. The last line of your response should be of the form Answer: $Answer (without quotes) where $Answer is the answer to the problem.\n\nLet $P(x)$ be a quadratic polynomial with real coefficients satisfying $x^2 - 2x + 2 \\le P(x) \\le 2x^2 - 4x + 3$ for all real  numbers $x$, and suppose $P(11) = 181$. Find $P(16)$.\n\nRemember to put your answer on its own line after \"Answer:\".","pre":" for all $ x $.\n\n---\n\n### Step 2:","chosen":" Consider","post":" the difference","kl":0.24226240813732147,"entropy_base":1.364830732345581,"top1_base":0.6842952370643616,"s1":1.3671875,"s2":2.15625,"b":28.625,"base_top":[[" Analy",0.6842958927154541],[" Consider",0.08172748982906342],[" Use",0.08172748982906342],[" Find",0.0495702289044857],[" Determine",0.020663945004343987],[" Let",0.016093097627162933]],"warp_top":[[" Analy",0.9586445689201355],[" Consider",0.013674329966306686],[" Use",0.013674329966306686],[" Find",0.006459296215325594],[" Determine",0.002376242307946086],[" Let",0.0014412638265639544]]}]};
+
+    const variants = [
+      { id: "pl_warp_dapo",  label: "LogitMLP (pass@1) — flattens at choice points" },
+      { id: "pl_warp_passk", label: "LogitMLP (pass@k) — sharpens at choice points" },
+    ];
+    let current = variants[0].id;
+
+    const tabsHost = document.createElement("div");
+    tabsHost.className = "variant-tabs";
+    const body = document.createElement("div");
+
+    function renderTopkTable(rows, kind) {
+      const t = document.createElement("table");
+      const max = Math.max(...rows.map(([, p]) => p));
+      for (const [tok, p] of rows) {
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td"); td1.className = "tok";
+        td1.textContent = JSON.stringify(tok).slice(1, -1);
+        const td2 = document.createElement("td"); td2.className = "bar";
+        const track = document.createElement("div"); track.className = "bar-track";
+        const bar = document.createElement("div");
+        bar.className = "barfill" + (kind === "warp" ? " warp" : "");
+        bar.style.width = `${(p/max*100).toFixed(1)}%`;
+        track.appendChild(bar);
+        const pcnt = document.createElement("div"); pcnt.className = "pcnt";
+        pcnt.textContent = (100*p).toFixed(1) + "%";
+        td2.appendChild(track); td2.appendChild(pcnt);
+        tr.appendChild(td1); tr.appendChild(td2); t.appendChild(tr);
+      }
+      return t;
+    }
+
+    function renderVariant() {
+      body.innerHTML = "";
+      const examples = data[current] || [];
+      const ranked = examples.slice().sort((a, b) => b.kl - a.kl).slice(0, 4);
+      for (const ex of ranked) {
+        const card = document.createElement("div");
+        card.className = "example-card";
+        const ctx = document.createElement("div");
+        ctx.className = "ctx";
+        const preEsc = escapeHtml(ex.pre);
+        const chosenEsc = escapeHtml(ex.chosen);
+        const postEsc = escapeHtml(ex.post);
+        ctx.innerHTML = `<span>…${preEsc}</span><span class="chosen">${chosenEsc}</span><span class="post-dim">${postEsc}…</span>`;
+        card.appendChild(ctx);
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.innerHTML =
+          `<span><b>s₁</b> = ${fmt(ex.s1)}</span>` +
+          `<span><b>s₂</b> = ${fmt(ex.s2)}</span>` +
+          `<span><b>base top-1 prob</b> = ${(100*ex.top1_base).toFixed(1)}%</span>` +
+          `<span><b>base entropy</b> = ${fmt(ex.entropy_base)} nats</span>` +
+          `<span><b>KL(warp‖base)</b> = ${fmt(ex.kl)} nats</span>`;
+        card.appendChild(meta);
+        const topkRow = document.createElement("div");
+        topkRow.className = "topk-row";
+        const left = document.createElement("div");
+        left.className = "topk";
+        const lh = document.createElement("h5"); lh.textContent = "Base distribution"; left.appendChild(lh);
+        left.appendChild(renderTopkTable(ex.base_top, "base"));
+        const right = document.createElement("div");
+        right.className = "topk";
+        const rh = document.createElement("h5"); rh.textContent = "After LogitMLP"; right.appendChild(rh);
+        right.appendChild(renderTopkTable(ex.warp_top, "warp"));
+        topkRow.appendChild(left); topkRow.appendChild(right);
+        card.appendChild(topkRow);
+        body.appendChild(card);
+      }
+    }
+
+    for (const v of variants) {
+      const b = document.createElement("button");
+      b.textContent = v.label;
+      b.dataset.k = v.id;
+      b.addEventListener("click", () => {
+        current = v.id;
+        for (const c of tabsHost.children) c.classList.toggle("active", c.dataset.k === current);
+        renderVariant();
+      });
+      tabsHost.appendChild(b);
+    }
+    tabsHost.firstChild.classList.add("active");
+
+    root.appendChild(tabsHost);
+    root.appendChild(body);
+    renderVariant();
+  })();
+</script>
+
+</body>
+</html>
