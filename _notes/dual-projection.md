@@ -3,6 +3,7 @@ title: "Dual projection"
 date: 2026-03-29
 description: "Polytope projection, Lagrangian dual, normal cones, and a small interactive μ-slider."
 tag: optimization
+published: false
 ---
 # Dual of polytope projection
 ### Problem 
