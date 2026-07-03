@@ -305,3 +305,28 @@ nav#filter a {
 		max-width: 100%;
 	}
 }
+
+/* KV-lifetime note: article figures sized for reading + centered captions.
+   img.kv-fig beats the theme's `.page__content img` (specificity 0,2,1 > 0,1,1). */
+.page__content img.kv-fig {
+	display: block;
+	margin: 1.6rem auto 0.5rem;
+	width: 100%;
+	max-width: 760px;
+	height: auto;
+	border-radius: 5px;
+}
+.page__content img.kv-fig.medium {
+	max-width: 600px;
+}
+.page__content img.kv-fig.narrow {
+	max-width: 440px;
+}
+.page__content p.kv-cap {
+	max-width: 720px;
+	margin: 0.15rem auto 1.9rem !important;
+	font-size: 0.84rem;
+	line-height: 1.5;
+	color: rgba(234, 234, 234, 0.62);
+	text-align: center;
+}

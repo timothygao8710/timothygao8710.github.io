@@ -1,13 +1,10 @@
 ---
-title: "temp"
+title: "Dual projection"
 date: 2026-03-29
 description: "Polytope projection, Lagrangian dual, normal cones, and a small interactive μ-slider."
 tag: optimization
 ---
 # Dual of polytope projection
-### Intro 
-I'm currently taking a convex optimization course (EE227BT), and we were talking about the classic problem of projecting a point onto a polytope. TLDR is that the dual problem corresponds to finding a normal direction that maximizes the gap between $$x_0$$ and the set along that direction, and I thought it would be cool to visualize it! (see bottom) 
-
 ### Problem 
 Given a point $$x_0 \in \mathbb{R}^n$$ and a polytope $$\mathcal{P} = \{ x \in \mathbb{R}^n \mid Ax \le b \}$$ with $$A \in \mathbb{R}^{m \times n}$$, $$b \in \mathbb{R}^m$$, one form writes the (Euclidean) projection as the QP: 
 
