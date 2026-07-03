@@ -18,8 +18,9 @@ permalink: /notes/
     {% endif %}
   {% endfor %}
 
-  <div class="notes-index__list">
-    <article class="notes-card">
+  {% comment %} Beyond Temperature is a static page (not a collection doc), so render it
+     as a card inserted into the date-sorted loop rather than pinned to the top. {% endcomment %}
+  {% capture bt_card %}<article class="notes-card">
       <a class="notes-card__link" href="{{ '/notes/beyond-temperature/' | relative_url }}" aria-label="Open note: Beyond Temperature"></a>
       <div class="notes-card__inner">
         <h2 class="notes-card__title">Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</h2>
@@ -29,8 +30,14 @@ permalink: /notes/
           <span class="notes-card__hashtag">#llm</span>
         </div>
       </div>
-    </article>
+    </article>{% endcapture %}
+  {% assign bt_ts = "2026-05-15" | date: "%s" | plus: 0 %}
+  {% assign bt_done = false %}
+
+  <div class="notes-index__list">
     {% for note in note_list %}
+      {% assign note_ts = note.date | date: "%s" | plus: 0 %}
+      {% if bt_done == false %}{% if note_ts < bt_ts %}{{ bt_card }}{% assign bt_done = true %}{% endif %}{% endif %}
       <article class="notes-card">
         <a class="notes-card__link" href="{{ note.url | relative_url }}" aria-label="Open note: {{ note.title | strip | escape }}"></a>
         <div class="notes-card__inner">
@@ -50,6 +57,7 @@ permalink: /notes/
         </div>
       </article>
     {% endfor %}
+    {% unless bt_done %}{{ bt_card }}{% endunless %}
   </div>
 </div>
 
