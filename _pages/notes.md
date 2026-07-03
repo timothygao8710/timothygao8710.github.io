@@ -50,7 +50,9 @@ permalink: /notes/
             {% if note.date %}
               <time class="notes-card__date" datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%b %d, %Y" }}</time>
             {% endif %}
-            {% if note.tag %}
+            {% if note.tags %}
+              {% for t in note.tags %}<span class="notes-card__hashtag">#{{ t }}</span>{% endfor %}
+            {% elsif note.tag %}
               <span class="notes-card__hashtag">#{{ note.tag }}</span>
             {% endif %}
           </div>
