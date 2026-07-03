@@ -244,5 +244,3 @@ Raw token frequency is not the explanation. Frequency has roughly zero correlati
 Examples of long-lived tokens: `<|begin_of_text|>`, `[\`, `·board`, `_e`, `·cheeks`, `908`, `750`.
 
 Examples of short-lived tokens: `·struggled`, `·uncertain`, `·enthusiasm`, `·curse`, `·news`, `·checkout`.
-
-Full tables are in `out/explore_mechanistic.md`.
