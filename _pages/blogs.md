@@ -71,7 +71,8 @@ permalink: /blogs/
 <ul class="notes-page__list">
   <li><em>Interleaved Block Diffusion</em></li>
   <li><em>Communication problems / prisoner's hat / hamming code </em></li>
-  <li><em>albelian groups thm </em></li>
+  <li><em>albelian groups thm intuitive proof </em></li>
+  <li><em>balancing vectors, ansh's problems </em></li>
   <li><em>Self studying second sem of eecs 127</em></li>
 </ul>
 <p class="notes-page__footnote">Thanks for stopping by :)</p>
