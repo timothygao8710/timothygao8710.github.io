@@ -63,9 +63,16 @@ permalink: /
 {:style="float: right; padding: 30px; max-width: 30%; min-width: 330px;"}
 
 <br/>
-Hi! I'm a 4th year undergrad at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS), interested in LLMs. 
 
-*This site is very much under construction!*
+Hi! I'm an incoming at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). Currently, I work on LLMs.
+
+If you like RLVR, you might like [Reasoning about Confidence](https://docs.google.com/presentation/d/1AhArRbct_EcK9Hzf-3rEhBKRjr38Qx4NyfMpVKNG9eY) and [Generalizing Temperature](https://timothygao8710.github.io/blogs/beyond-temperature/). 
+
+If you like mechanistic interpretability, you might like [QK Visualizer](https://timothygao8710.github.io/QK-Visualizer/) and [KV lifetime](https://timothygao8710.github.io/blogs/kv-lifetime/).
+
+If you like diffusionLLMs, you might like [The Annotated DiffusionGemma](https://colab.research.google.com/drive/17egFGmboDkhU6duNQHvjB1J0oiKslOMl?usp=sharing).
+
+If you like competitive programming, you can check out [some](https://github.com/timothygao8710/Problem-Setting/blob/main/Pancakes-II/pancakes-II-editorial.pdf) [problems](https://github.com/timothygao8710/Problem-Setting/blob/main/Highways/Highways_Editorial.pdf) [I've](https://github.com/timothygao8710/Problem-Setting/blob/main/Rating/rating-editorial.pdf) written in the past.
 
 <!-- I'm broadly interested in Reinforcement Learning and Robot Learning. 
 Currently, I work on Policy Extraction for generative offline RL algorithms, and offline-to-online RL for robotics at [BAIR](https://bair.berkeley.edu), in professor [Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/)'s group. I've also had the chance to work on Test-Time policy improvement methods as an OpenAI research fellow, and online RL for VLA exploration and post-training with the [GEAR](https://research.nvidia.com/labs/gear/) team at NVIDIA. I'll also be working on RL research as a QR at Jump Trading this summer. Previously, I've built LLM Infra with the ChipNemo team at NVIDIA, and worked on high-speed simulations on FPGAs for Robotaxi charging at Tesla. Outside research, I spend my time with friends at [Cal Launchpad](https://launchpad.studentorg.berkeley.edu), and playing IM basketball.
