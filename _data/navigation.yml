@@ -2,6 +2,8 @@
 main:
   - title: "Blogs"
     url: /blogs/
+  - title: "CV"
+    url: /pdfs/Timothy_Gao_Resume.pdf
   # - title: "About"
   #   url: '/'
   # - title: "Research"
