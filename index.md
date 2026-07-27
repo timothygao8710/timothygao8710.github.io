@@ -58,7 +58,7 @@ permalink: /
   }
 </style>
 
-![Timothy Gao](./images/pfp2.jpeg)
+![Timothy Gao](./images/pfp.jpeg)
 {:style="float: right; padding: 30px; max-width: 30%; min-width: 330px;"}
 
 <br/>
