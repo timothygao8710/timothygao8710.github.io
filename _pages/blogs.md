@@ -1,19 +1,19 @@
 ---
-title: "Notes"
+title: "Blogs"
 layout: splash
-permalink: /notes/
+permalink: /blogs/
 ---
 
 <div class="notes-page">
 <div class="notes-index">
   <header class="notes-index__header">
-    <h1 class="notes-index__title">Notes</h1>
+    <h1 class="notes-index__title">Blogs</h1>
     <p class="notes-index__lead">Some things I think are cool! Currently mainly for my own reference, so heads up and apologies for poor writing, but hopefully it will get better.</p>
   </header>
 
   {% assign note_list = site.pages | where_exp: "p", "p.path == '__no_match__'" %}
   {% for coll in site.collections %}
-    {% if coll.label == "notes" %}
+    {% if coll.label == "blogs" %}
       {% assign note_list = coll.docs | sort: "date" | reverse %}
     {% endif %}
   {% endfor %}
@@ -21,7 +21,7 @@ permalink: /notes/
   {% comment %} Beyond Temperature is a static page (not a collection doc), so render it
      as a card inserted into the date-sorted loop rather than pinned to the top. {% endcomment %}
   {% capture bt_card %}<article class="notes-card">
-      <a class="notes-card__link" href="{{ '/notes/beyond-temperature/' | relative_url }}" aria-label="Open note: Beyond Temperature"></a>
+      <a class="notes-card__link" href="{{ '/blogs/beyond-temperature/' | relative_url }}" aria-label="Open blog: Beyond Temperature"></a>
       <div class="notes-card__inner">
         <h2 class="notes-card__title">Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</h2>
         <p class="notes-card__desc">A final-project blog on learning per-token logit transformations with RLVR to escape the accuracy&ndash;diversity tradeoff that temperature sampling is stuck with.</p>
@@ -39,7 +39,11 @@ permalink: /notes/
       {% assign note_ts = note.date | date: "%s" | plus: 0 %}
       {% if bt_done == false %}{% if note_ts < bt_ts %}{{ bt_card }}{% assign bt_done = true %}{% endif %}{% endif %}
       <article class="notes-card">
-        <a class="notes-card__link" href="{{ note.url | relative_url }}" aria-label="Open note: {{ note.title | strip | escape }}"></a>
+        {% if note.external_url %}
+          <a class="notes-card__link" href="{{ note.external_url }}" aria-label="Open blog: {{ note.title | strip | escape }}"></a>
+        {% else %}
+          <a class="notes-card__link" href="{{ note.url | relative_url }}" aria-label="Open blog: {{ note.title | strip | escape }}"></a>
+        {% endif %}
         <div class="notes-card__inner">
           <h2 class="notes-card__title">{{ note.title }}</h2>
           {% assign blurb = note.description | default: note.excerpt %}
@@ -48,7 +52,7 @@ permalink: /notes/
           {% endif %}
           <div class="notes-card__meta">
             {% if note.date %}
-              <time class="notes-card__date" datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%b %d, %Y" }}</time>
+              <time class="notes-card__date" datetime="{{ note.date | date_to_xmlschema }}">{% if note.date_label %}{{ note.date_label }}{% else %}{{ note.date | date: "%b %d, %Y" }}{% endif %}</time>
             {% endif %}
             {% if note.tags %}
               {% for t in note.tags %}<span class="notes-card__hashtag">#{{ t }}</span>{% endfor %}

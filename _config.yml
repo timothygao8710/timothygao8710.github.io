@@ -238,9 +238,9 @@ plugins:
   - jekyll-include-cache
 
 collections:
-  notes:
+  blogs:
     output: true
-    permalink: /notes/:name/
+    permalink: /blogs/:name/
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -291,7 +291,7 @@ compress_html:
 defaults:
   - scope:
       path: ""
-      type: notes
+      type: blogs
     values:
       layout: note
   # _posts
