@@ -64,7 +64,7 @@ permalink: /
 
 <br/>
 
-Hi! I'm an incoming at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). Currently, I work on LLMs.
+Hi! I'm a 3rd year undergrad at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). Currently, I work on LLMs.
 
 If you like RLVR, you might like [Reasoning about Confidence](https://docs.google.com/presentation/d/1AhArRbct_EcK9Hzf-3rEhBKRjr38Qx4NyfMpVKNG9eY) and [Generalizing Temperature](https://timothygao8710.github.io/blogs/beyond-temperature/). 
 
