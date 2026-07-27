@@ -8,7 +8,7 @@ permalink: /blogs/
 <div class="notes-index">
   <header class="notes-index__header">
     <h1 class="notes-index__title">Blogs</h1>
-    <p class="notes-index__lead">Some of my research work!</p>
+    <p class="notes-index__lead">Currently mainly for my own reference, so heads up and apologies for poor writing, but hopefully it will get better.</p>
   </header>
 
   {% assign note_list = site.pages | where_exp: "p", "p.path == '__no_match__'" %}
@@ -69,7 +69,8 @@ permalink: /blogs/
 
 <h3 class="notes-page__subhead" id="draft-topics">Draft topics</h3>
 <ul class="notes-page__list">
-  <li><em>TBD</em></li>
+  <li><em>Interleaved Block Diffusion</em></li>
+  <li><em>Self studying second sem of eecs 127</em></li>
 </ul>
 <p class="notes-page__footnote">Thanks for stopping by :)</p>
 
