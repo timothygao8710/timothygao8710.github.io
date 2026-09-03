@@ -1,8 +1,8 @@
 ---
 title: "KV's know their own lifetime"
 date: 2026-07-03
-description: "Can a key vector predict how long it will keep receiving attention from future queries? Across Llama, Qwen 3, and Gemma 3 (1B-8B) the answer is yes, and it yields a content-based KV-cache eviction policy that ties attention-based baselines on fluent generation and beats them on needle-in-a-haystack."
-tags: [llm, inference, efficient-ai-models]
+description: "Conditioned on information of a key vector alone, a model can learn when it should be evicted surprisingly well"
+tags: [llm, inference]
 ---
 
 # KV's know their own lifetime
