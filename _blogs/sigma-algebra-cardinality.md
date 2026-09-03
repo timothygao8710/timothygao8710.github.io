@@ -70,7 +70,7 @@ Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge 
   0011. intersect 0.110 -> 00110
   ```
 
-  where at each step, we can inductively assume all strings with one less blank filled are attainable, and use unions to fill in the 1s, intersections fill in the 0s.
+  where at each step, we can inductively assume all strings with one less blank filled are attainable, and use unions to buy 1s, intersections to buy 0s.
 
 For the finite, discrete case, this seems to suggest that any sigma algebra is isomorphic to some power set. For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
 
