@@ -15,10 +15,10 @@ For example, the Borel sigma-algebra $$\mathcal{B}(\mathbb{R})$$ is the smallest
 
 $$
 \begin{array}{cc}
-\{(a,b) \mid a,b\in\mathbb{R}\} &
-\{[a,b] \mid a,b\in\mathbb{R}\} \\[6pt]
-\{(a,b] \mid a,b\in\mathbb{R}\} &
-\{[a,\infty) \mid a\in\mathbb{R}\}
+\{(a,b) \mid a,b\in\mathbb{R}\}, &
+\{[a,b] \mid a,b\in\mathbb{R}\}, \\[12pt]
+\{(a,b] \mid a,b\in\mathbb{R}\}, &
+\{[a,\infty) \mid a\in\mathbb{R}\} , \text{etc}
 \end{array}
 $$
 
@@ -74,7 +74,7 @@ Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge 
 
 For the finite, discrete case, this seems to suggest that any sigma algebra is isomorphic to some power set. For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
 
-This naively leads to an $$O(NM^2)$$ algorithm, but from discussions with classmates, I came to realize:
+This naively leads to an $$O(NM^2)$$ algorithm, but through the discussions I came to realize:
 
 - This algorithm can easily be sped up to $$O(NM)$$: you can avoid explicitly constructing the graph, when processing each of the $$N$$ strings in order, condition on existing components formed with the strings processed so far, work inside each one to see if / how it should be partitioned according to the current string (see code)
 
