@@ -13,11 +13,14 @@ We're talking about sigma algebras in my random processes class EE226A, which is
 
 For example, the Borel sigma-algebra $$\mathcal{B}(\mathbb{R})$$ is the smallest sigma-algebra containing all open sets on the reals, and can also be generated with any of:
 
-- $$\{ (a, b) \mid a, b \in \mathbb{R} \}$$
-- $$\{ [a, b] \mid a, b \in \mathbb{R} \}$$
-- $$\{ (a, b] \mid a, b \in \mathbb{R} \}$$
-- $$\{ [a, \infty) \mid a \in \mathbb{R} \}$$
-- etc.
+$$
+\begin{array}{cc}
+\{(a,b) \mid a,b\in\mathbb{R}\} &
+\{[a,b] \mid a,b\in\mathbb{R}\} \\[6pt]
+\{(a,b] \mid a,b\in\mathbb{R}\} &
+\{[a,\infty) \mid a\in\mathbb{R}\}
+\end{array}
+$$
 
 In higher dimensions $$d \geq 2$$, $$\mathcal{B}(\mathbb{R}^d)$$ can be generated with rectangles, for example
 
@@ -25,13 +28,7 @@ $$
 \prod_{i=1}^{d} (-\infty, a_i], \qquad a_1 \in \mathbb{R}, \ldots, a_d \in \mathbb{R},
 $$
 
-or half-spaces
-
-$$
-\mathbb{R}^{j-1} \times (-\infty, a] \times \mathbb{R}^{d-j} = \{ x \in \mathbb{R}^d : x_j \leq a \}, \qquad j \in \{ 1, \ldots, d \}, \; a \in \mathbb{R}.
-$$
-
-And a very similar treatment for $$\mathcal{B}(\overline{\mathbb{R}})$$, over the extended reals.
+or half-spaces. And a very similar treatment for $$\mathcal{B}(\overline{\mathbb{R}})$$, over the extended reals.
 
 Thinking along these lines, I was inspired[^2] to post the following question to Edstem:
 
@@ -73,7 +70,7 @@ Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge 
   0011. intersect 0.110 -> 00110
   ```
 
-  where at each step, we can inductively assume all strings with one less blank filled are attainable (in general, unions fill in the 1s, intersections fill in the 0s).
+  where at each step, we can inductively assume all strings with one less blank filled are attainable, and use unions to fill in the 1s, intersections fill in the 0s.
 
 For the finite, discrete case, this seems to suggest that any sigma algebra is isomorphic to some power set. For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
 
@@ -81,7 +78,7 @@ This naively leads to an $$O(NM^2)$$ algorithm, but from discussions with classm
 
 - This algorithm can easily be sped up to $$O(NM)$$: you can avoid explicitly constructing the graph, when processing each of the $$N$$ strings in order, condition on existing components formed with the strings processed so far, work inside each one to see if / how it should be partitioned according to the current string (see code)
 
-- A simpler argument is to generate a "basis" that obviously generates the rest of the set, for example, take the intersection of
+- A simpler argument is to generate some "basis" that obviously generates the rest of the set, for example, take the intersection of
 
   ```text
   10.....
@@ -90,9 +87,7 @@ This naively leads to an $$O(NM^2)$$ algorithm, but from discussions with classm
   etc
   ```
 
-  to get `1000000`
-
-  same argument applies for every coordinate, then we can use these to generate all $$2^k$$ binary strings.
+  to get `1000000` same argument applies for every coordinate, then we can use these to generate all $$2^k$$ binary strings.
 
 - Talm bout sum "atoms" of a sigma algebra?
 
