@@ -28,6 +28,8 @@ permalink: /blogs/
         <div class="notes-card__meta">
           <time class="notes-card__date" datetime="2026-05-15">15 May 2026</time>
           <span class="notes-card__hashtag">#llm</span>
+          <span class="notes-card__hashtag">#inference</span>
+          <span class="notes-card__hashtag">#rl</span>
         </div>
       </div>
     </article>{% endcapture %}

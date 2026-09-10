@@ -2,7 +2,7 @@
 title: "KV's know their own lifetime"
 date: 2026-07-03
 description: "Conditioned on information of a key vector alone, a model can learn when it should be evicted surprisingly well"
-tags: [llm, inference]
+tags: [llm, interp, inference]
 ---
 
 # KV's know their own lifetime
