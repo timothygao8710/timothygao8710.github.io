@@ -21,10 +21,10 @@ permalink: /blogs/
   {% comment %} Beyond Temperature is a static page (not a collection doc), so render it
      as a card inserted into the date-sorted loop rather than pinned to the top. {% endcomment %}
   {% capture bt_card %}<article class="notes-card">
-      <a class="notes-card__link" href="{{ '/blogs/beyond-temperature/' | relative_url }}" aria-label="Open blog: Beyond Temperature"></a>
+      <a class="notes-card__link" href="{{ '/blogs/beyond-temperature/' | relative_url }}" aria-label="Open blog: Logit transforms beyond temperature"></a>
       <div class="notes-card__inner">
-        <h2 class="notes-card__title">Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</h2>
-        <p class="notes-card__desc">A final-project blog on learning per-token logit transformations with RLVR to escape the accuracy&ndash;diversity tradeoff that temperature sampling is stuck with.</p>
+        <h2 class="notes-card__title">Logit transforms beyond temperature</h2>
+        <p class="notes-card__desc">Try replacing temperature (single scalar) with a piecewise monotonic function</p>
         <div class="notes-card__meta">
           <time class="notes-card__date" datetime="2026-05-15">15 May 2026</time>
           <span class="notes-card__hashtag">#llm</span>
@@ -67,14 +67,6 @@ permalink: /blogs/
   </div>
 </div>
 
-<h3 class="notes-page__subhead" id="draft-topics">Draft topics</h3>
-<ul class="notes-page__list">
-  <li><em>Interleaved Block Diffusion</em></li>
-  <li><em>Communication problems / prisoner's hat / hamming code </em></li>
-  <li><em>albelian groups thm intuitive proof </em></li>
-  <li><em>balancing vectors, ansh's problems </em></li>
-  <li><em>Self studying second sem of eecs 127</em></li>
-</ul>
 <p class="notes-page__footnote">Thanks for stopping by :)</p>
 
 </div>
