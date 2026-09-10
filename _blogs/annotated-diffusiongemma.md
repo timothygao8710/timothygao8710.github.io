@@ -1,7 +1,6 @@
 ---
 title: "The Annotated DiffusionGemma"
 date: 2026-07-27
-date_label: "July 2026"
 external_url: https://mlberkeley.substack.com/p/the-annotated-diffusiongemma
 description: "An annotated, from-scratch reimplementation of DiffusionGemma"
 tags: [llm, inference]

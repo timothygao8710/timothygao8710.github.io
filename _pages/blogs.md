@@ -26,7 +26,7 @@ permalink: /blogs/
         <h2 class="notes-card__title">Beyond Temperature: Token-Adaptive Logit Transformations Learned with RLVR</h2>
         <p class="notes-card__desc">A final-project blog on learning per-token logit transformations with RLVR to escape the accuracy&ndash;diversity tradeoff that temperature sampling is stuck with.</p>
         <div class="notes-card__meta">
-          <time class="notes-card__date" datetime="2026-05-15">May 15, 2026</time>
+          <time class="notes-card__date" datetime="2026-05-15">15 May 2026</time>
           <span class="notes-card__hashtag">#llm</span>
         </div>
       </div>
@@ -52,7 +52,7 @@ permalink: /blogs/
           {% endif %}
           <div class="notes-card__meta">
             {% if note.date %}
-              <time class="notes-card__date" datetime="{{ note.date | date_to_xmlschema }}">{% if note.date_label %}{{ note.date_label }}{% else %}{{ note.date | date: "%b %d, %Y" }}{% endif %}</time>
+              <time class="notes-card__date" datetime="{{ note.date | date_to_xmlschema }}">{{ note.date | date: "%-d %B %Y" }}</time>
             {% endif %}
             {% if note.tags %}
               {% for t in note.tags %}<span class="notes-card__hashtag">#{{ t }}</span>{% endfor %}
