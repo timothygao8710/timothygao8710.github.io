@@ -8,7 +8,6 @@ permalink: /blogs/
 <div class="notes-index">
   <header class="notes-index__header">
     <h1 class="notes-index__title">Blogs</h1>
-    <p class="notes-index__lead">What is bro talm bout</p>
   </header>
 
   {% assign note_list = site.pages | where_exp: "p", "p.path == '__no_match__'" %}
