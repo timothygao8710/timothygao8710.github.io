@@ -72,7 +72,7 @@ Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge 
 
   where at each step, we can inductively assume all strings with one less blank filled are attainable, and use unions to buy 1s, intersections to buy 0s.
 
-For the finite, discrete case, this seems to suggest that any sigma algebra is isomorphic to some power set. For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
+For the finite, discrete case, this suggests any sigma algebra is isomorphic to some power set - turns out this is in fact true (see atoms). For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
 
 This naively leads to an $$O(NM^2)$$ algorithm, but through the discussions I came to realize:
 
@@ -89,7 +89,7 @@ This naively leads to an $$O(NM^2)$$ algorithm, but through the discussions I ca
 
   to get `1000000` same argument applies for every coordinate, then we can use these to generate all $$2^k$$ binary strings.
 
-- Related is the "atom" of a sigma-algebra $$\mathcal{F}$$, which is any non-empty $$A \in \mathcal{F}$$ such that $$B \in \mathcal{F}$$, $$B \subseteq A \implies B = \emptyset \text{ or } B = A$$, in some sense the minimal nonempty set. It follows that two different atoms have empty intersection, and if F is atomic, i.e. contains atoms covering $$\Omega$$, all members of F are unions of disjoint atoms. Note that not all F are atomic, for example, $$\{0,1\}^A$$ where $$A$$ is uncountable contains no atoms at all, since every member is determined by countably many coordinates. 
+- Learned about the "atom" of a sigma-algebra $$\mathcal{F}$$, which is any non-empty $$A \in \mathcal{F}$$ such that $$B \in \mathcal{F}$$, $$B \subseteq A \implies B = \emptyset \text{ or } B = A$$, in some sense the minimal nonempty set. It follows that two different atoms have empty intersection, and if F is atomic, i.e. contains atoms covering $$\Omega$$, all members of F are unions of disjoint atoms. Note that not all F are atomic, for example, $$\{0,1\}^A$$ where $$A$$ is uncountable contains no atoms at all, since every member is determined by countably many coordinates. 
 
 If F is countable, the atom that any $$x \in \Omega$$ belongs to is simply the countable intersection of all sets in F containing x — the cliques. Thus, it must be atomic, and moreover cannot be infinite, otherwise it would contain infinitely many atoms and be uncountable. Thus, there cannot exist a countably infinite sigma algebra.
 
