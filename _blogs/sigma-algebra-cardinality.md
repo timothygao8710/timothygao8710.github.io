@@ -89,9 +89,7 @@ This naively leads to an $$O(NM^2)$$ algorithm, but through the discussions I ca
 
   to get `1000000` same argument applies for every coordinate, then we can use these to generate all $$2^k$$ binary strings.
 
-- Learned about the "atom" of a sigma-algebra $$\mathcal{F}$$, which is any non-empty $$A \in \mathcal{F}$$ such that $$B \in \mathcal{F}$$, $$B \subseteq A \implies B = \emptyset \text{ or } B = A$$, in some sense the minimal nonempty set. It follows that two different atoms have empty intersection, and if F is atomic, i.e. contains atoms covering $$\Omega$$, all members of F are unions of disjoint atoms. Note that not all F are atomic, for example, $$\{0,1\}^A$$ where $$A$$ is uncountable contains no atoms at all, since every member is determined by countably many coordinates. 
-
-If F is countable, the atom that any $$x \in \Omega$$ belongs to is simply the countable intersection of all sets in F containing x — the cliques. Thus, it must be atomic, and moreover cannot be infinite, otherwise it would contain infinitely many atoms and be uncountable. Thus, there cannot exist a countably infinite sigma algebra.
+- Learned about the "atom" of a sigma-algebra $$\mathcal{F}$$, which is any non-empty $$A \in \mathcal{F}$$ such that $$B \in \mathcal{F}$$, $$B \subseteq A \implies B = \emptyset \text{ or } B = A$$, in some sense the minimal nonempty set. It follows that two different atoms have empty intersection, and if F is atomic, i.e. contains atoms covering $$\Omega$$, all members of F are unions of disjoint atoms. Note that not all F are atomic, for example, $$\{0,1\}^A$$ where $$A$$ is uncountable contains no atoms at all, since every member is determined by countably many coordinates. If F is countable, the atom that any $$x \in \Omega$$ belongs to is simply the countable intersection of all sets in F containing x — the cliques. Thus, it must be atomic, and moreover cannot be infinite, otherwise it would contain infinitely many atoms and be uncountable. Thus, there cannot exist a countably infinite sigma algebra.
 
 ### Code
 
