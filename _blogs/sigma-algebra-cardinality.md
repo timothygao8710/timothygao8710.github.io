@@ -72,7 +72,7 @@ Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge 
 
   where at each step, we can inductively assume all strings with one less blank filled are attainable, and use unions to buy 1s, intersections to buy 0s.
 
-For the finite, discrete case, this suggests any sigma algebra is isomorphic to some power set - turns out this is in fact true (see atoms). For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
+For the finite, discrete case, this seems to suggest any sigma algebra is isomorphic to some power set - turns out this is in fact true (see atoms). For example, for any $$(\Omega, \mathcal{F}, P)$$, we can make another probability space $$(\Omega', 2^{\Omega'}, P')$$ such that $$2^{\Omega'}$$ is isomorphic with $$\mathcal{F}$$.
 
 This naively leads to an $$O(NM^2)$$ algorithm, but through the discussions I came to realize:
 
