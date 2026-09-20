@@ -1,7 +1,7 @@
 ---
 title: "Cardinality of Generated Sigma Algebra (Discrete, Finite Case)"
 date: 2026-09-02
-description: "Algorithm puzzle inspired by learning about sigma algebras in EE226A"
+description: "Algorithm puzzle inspired by learning about sigma algebras in Math 202A"
 tags: [math, algorithms]
 ---
 
