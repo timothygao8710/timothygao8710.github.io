@@ -9,7 +9,7 @@ tags: [math, algorithms]
 
 ### Background
 
-We're talking about sigma algebras in my random processes class EE226A, which is a subset of the power set $$2^{\Omega}$$ of the sample space that contains $$\Omega$$ and is closed under countable union and complement. Then there's this notion of sigma algebras "generated" from some source set $$S$$ — the intersection of all sigma algebras containing $$S$$, or the set obtained by repeatedly generating using union and complement from existing members.[^1]
+We're talking about sigma algebras in my analysis class Math 202A, which is a subset of the power set $$2^{\Omega}$$ of the sample space that contains $$\Omega$$ and is closed under countable union and complement. Then there's this notion of sigma algebras "generated" from some source set $$S$$ — the intersection of all sigma algebras containing $$S$$, or in the finite case, the set obtained by repeatedly generating using union and complement from existing members.
 
 For example, the Borel sigma-algebra $$\mathcal{B}(\mathbb{R})$$ is the smallest sigma-algebra containing all open sets on the reals, and can also be generated with any of:
 
@@ -30,7 +30,7 @@ $$
 
 or half-spaces. And a very similar treatment for $$\mathcal{B}(\overline{\mathbb{R}})$$, over the extended reals.
 
-Thinking along these lines, I was inspired[^2] to post the following question to Edstem:
+Thinking along these lines, I was inspired[^1] to post the following question to Edstem:
 
 ### Problem
 
@@ -89,7 +89,7 @@ This naively leads to an $$O(NM^2)$$ algorithm, but through the discussions I ca
 
   to get `1000000` same argument applies for every coordinate, then we can use these to generate all $$2^k$$ binary strings.
 
-- Talm bout sum "atoms" of a sigma algebra?
+- Related is the "atom" of a sigma-algebra $$\mathcal{F}$$, which is any non-empty $$A \in \mathcal{F}$$ such that $$B \in \mathcal{F}$$, $$B \subseteq A \implies B = \emptyset \text{ or } B = A$$. It follows that two different atoms have empty intersection, and if F is atomic, i.e. contains atoms covering $$\Omega$$, all members of F are unions of disjoint atoms. Note not all F are atomic, for example, $$\{0,1\}^A$$ where $$A$$ is uncountable contains no atoms at all, since every member is determined by countably many coordinates. If F is countable, the atom that any $$x \in \Omega$$ belongs to is simply the countable intersection of all sets in F containing x — the cliques. Thus, it must be atomic, and moreover cannot be infinite, otherwise it would contain infinitely many atoms and be uncountable. Thus, there cannot exist a countably infinite sigma algebra.
 
 ### Code
 
@@ -121,6 +121,4 @@ def solve(strs):
     return 2 ** len(comps)
 ```
 
-[^1]: For countable $$\Omega$$
-
-[^2]: Also inspired by thinking about [this Atcoder problem](https://atcoder.jp/contests/arc227/tasks/arc227_d).
+[^1]: Also inspired by thinking about [this Atcoder problem](https://atcoder.jp/contests/arc227/tasks/arc227_d).
