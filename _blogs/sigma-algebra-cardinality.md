@@ -49,7 +49,7 @@ Design an algorithm that takes in the input strings and outputs this number in t
 
 We can get intersection from de Morgan's Law which we will use below.
 
-Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge between coordinates $$i$$ and $$j$$ if $$\operatorname{Corr}(i, j) = 1$$. Notice the resulting graph is a bunch of disjoint cliques. I claim the answer is $$2^{\text{number of components}}$$, or equivalently, $$2^{\text{number of distinct columns}}$$ of the input $$N \times M$$ matrix. It's obviously the upper bound. To see it is also the lower bound, consider an inductive argument:
+Let's consider a graph of $$M$$ vertices, one for each coordinate. Draw an edge between coordinates $$i$$ and $$j$$ if $$\operatorname{Corr}(i, j) = +1$$. Notice the resulting graph is a bunch of disjoint cliques. I claim the answer is $$2^{\text{number of components}}$$, or equivalently, $$2^{\text{number of distinct columns}}$$ of the input $$N \times M$$ matrix. It's obviously the upper bound. To see it is also the lower bound, consider an inductive argument:
 
 - First, shrink all connected components into a single coordinate (within one component, $$S[u] = 1 \iff S[v] = 1$$ for every string $$S$$)
 
