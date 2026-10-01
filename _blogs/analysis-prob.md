@@ -79,7 +79,7 @@ In summary, for any $$N$$, we can find a sufficiently tight $$U$$ so that $$N$$ 
 
 [^compact]: In $$\mathbb{R}$$, compact is equivalent to closed and bounded. Thus its complement is open and lies in the Borel $$\sigma$$-algebra. Since the Lebesgue $$\sigma$$-algebra is a completion of the Borel $$\sigma$$-algebra, $$K$$ is Lebesgue measurable.
 
-[^intersection]: Here, $$x \in \bigcap_{j=0}^{N-1} (K + jh)$$ means $$x, x - h, \ldots, x - (N-1)h \in K$$. We can reverse it to get inc to dec and vice versa, so the sign is not overly important.
+[^intersection]: Here, $$x \in \bigcap_{j=0}^{N-1} (K + jh)$$ means $$x, x - h, \ldots, x - (N-1)h \in K$$, but we can reverse it to get inc to dec and vice versa, so the sign is not overly important.
 
 [^separation]: In particular, it states that if $$K$$ is compact, $$F$$ is closed, and $$K \cap F = \emptyset$$, then $$\operatorname{dist}(K, F) = \inf\{\lvert x - y \rvert : x \in K,\ y \in F\} > 0$$. We take $$F = U^c$$ and the conclusion follows.
 
