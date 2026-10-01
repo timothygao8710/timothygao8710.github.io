@@ -7,7 +7,7 @@ tags: [math]
 
 # Positive measure forces long progressions
 
-Wanted to share a particularly beautiful analysis problem on my practice midterm:
+Wanted to share a particularly beautiful analysis problem on my Math 202A practice midterm:
 
 > An arithmetic progression on $$\mathbb{R}$$ of length $$k$$ is a sequence of real numbers of the form $$a, a + h, \ldots, a + (k - 1)h$$ for some $$a, h \in \mathbb{R}$$ and $$h > 0$$. Show that any Lebesgue measurable subset of $$\mathbb{R}$$ of positive and finite Lebesgue measure contains arbitrarily long arithmetic progressions on $$\mathbb{R}$$.
 
@@ -26,12 +26,14 @@ Intuitively, if we can somehow bound the measure of the container all $$N$$ sets
 ![N translated copies of K inside a container, overlapping in a shaded intersection](/images/notes/analysis-prob/fig1_intersection.png){: .kv-fig .narrow}
 
 *Fig 1. Illustration of intuition only; in practice, $$K$$ doesn't need to contain any intervals. For example, [the fat Cantor set](https://en.wikipedia.org/wiki/Smith%E2%80%93Volterra%E2%80%93Cantor_set).*
+{: .kv-cap}
 
 This motivates using outer regularity, which gives us a bounding open set $$U$$ arbitrarily close in measure, i.e. for every $$\varepsilon > 0$$, there exists an open $$U \supseteq K$$ with $$\lambda(U) - \lambda(K) < \varepsilon$$.
 
 ![Inner regularity finds a compact K inside E; outer regularity finds an open U around K](/images/notes/analysis-prob/fig2_regularity.png){: .kv-fig}
 
 *Fig 2. Two uses of inner / outer regularity*
+{: .kv-cap}
 
 In order for any to fit, there must exist some $$d > 0$$ such that $$K$$ and $$K + d$$ both lie in $$U$$. We may proceed with the separation lemma (since $$K$$ is compact and $$U^c$$ is closed), which not only guarantees $$d$$ exists, but also that for all $$\lvert d' \rvert < d$$, $$K + d'$$ also lies in $$U$$[^separation]. But we haven't covered this theorem yet, and we can arrive at the same conclusion with a more elementary method.
 
@@ -46,11 +48,12 @@ where each $$r_i$$ is chosen so that $$B(x_i, 2r_i) \subseteq U$$ (and hence als
 
 - Consider any $$x \in K$$. Because it is covered by cover 1, it is distance at most $$r_{k_i}$$ from some $$x_{k_i}$$. Because ball $$k_i$$ is also in cover 2, $$B(x, r_{k_i}) \subseteq B(x_{k_i}, 2r_{k_i}) \subseteq U$$. Thus, we may move up to $$r_{k_i}$$ away from $$x$$ and still remain in $$U$$. If we let $$r = \min(r_{k_1}, r_{k_2}, \ldots, r_{k_n})$$, then $$r$$ is a "safe distance" for any $$x \in K$$: $$x + d \in U$$ for all $$\lvert d \rvert < r$$.
 
-This feels strange, that it is regardless of our choice of $$U$$ — it can be arbitrarily tight as long as it contains $$K$$ — but remember $$(0, \varepsilon)$$ bijects with $$\mathbb{R}$$ for any $$\varepsilon > 0$$!
+This feels strange, that it is regardless of our choice of $$U$$ — it can be arbitrarily tight as long as it contains $$K$$ - the point is there is always a gap still.
 
 ![Cover 1 (green) and cover 2 (blue) balls around points of K inside U, reduced to a finite subcover](/images/notes/analysis-prob/fig3_covers.png){: .kv-fig}
 
 *Fig 3. Construction using compactness*
+{: .kv-cap}
 
 To conclude, using this safe distance, we can fit $$K + h, K + 2h, \ldots, K + (N-1)h$$ by choosing $$h$$ appropriately small as a function of $$N$$. In particular, let $$r = \inf\{\lvert x - y \rvert : x \in K,\ y \in U^c\} > 0$$ by the separation lemma, or $$r = \min(r_{k_1}, r_{k_2}, \ldots, r_{k_n})$$ by the argument above. Then, for any choice of $$N$$, letting $$h = r / N$$ ensures all $$N$$ sets fit in $$U$$.
 
@@ -72,7 +75,7 @@ We can let $$\lambda(U) < \frac{N}{N-1}\lambda(K)$$. Then, $$\lambda\big(\bigcap
 In summary, for any $$N$$, we can find a sufficiently tight $$U$$ so that $$N$$ sets each measuring $$\lambda(K)$$ must have non-empty intersection, then we can ensure all of them fit by choosing a sufficiently small $$h$$ based on $$N$$ and the safe distance between $$K$$ and $$U^c$$. This is essentially an extension of the construction in the proof of [Steinhaus's theorem](https://en.wikipedia.org/wiki/Steinhaus_theorem). On a personal note, this is one of the first problems that showed me analysis is more than rigor and formalism, there are actually some really cool and new ways of thinking that lie in wait!
 
 
-[^regularity]: Outer regularity follows from the definition of the outer measure used to construct the Lebesgue measure: the infimum of $$\sum_i \lvert I_i \rvert$$ over all countable covers of the set by open intervals $$I_i$$. Then to get inner regularity, consider taking complements.
+[^regularity]: Outer regularity follows from the definition of the outer measure used to construct the Lebesgue measure: the infimum of $$\sum_i \lvert I_i \rvert$$ over all countable covers of the set by open intervals $$I_i$$. Then to get inner regularity, restrict to a sufficiently large bounded interval and apply outer regularity to the complement.
 
 [^compact]: In $$\mathbb{R}$$, compact is equivalent to closed and bounded. Thus its complement is open and lies in the Borel $$\sigma$$-algebra. Since the Lebesgue $$\sigma$$-algebra is a completion of the Borel $$\sigma$$-algebra, $$K$$ is Lebesgue measurable.
 

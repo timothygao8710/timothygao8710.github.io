@@ -1,15 +1,15 @@
 ---
-title: "Cardinality of Generated Sigma Algebra (Discrete, Finite Case)"
+title: "Sigma Algebra Puzzle"
 date: 2026-09-02
-description: "Algorithm puzzle inspired by learning about sigma algebras in Math 202A"
+description: "Algorithm puzzle inspired by learning about sigma algebras in STAT 205A"
 tags: [math, algorithms]
 ---
 
-# Cardinality of Generated Sigma Algebra (Discrete, Finite Case)
+# Sigma Algebra Puzzle
 
 ### Background
 
-We're talking about sigma algebras in my analysis class Math 202A, which is a subset of the power set $$2^{\Omega}$$ of the sample space that contains $$\Omega$$ and is closed under countable union and complement. Then there's this notion of sigma algebras "generated" from some source set $$S$$ — the intersection of all sigma algebras containing $$S$$, or in the finite case, the set obtained by repeatedly generating using union and complement from existing members.
+We're talking about sigma algebras in my probability theory class STAT 205A, which is a subset of the power set $$2^{\Omega}$$ of the sample space that contains $$\Omega$$ and is closed under countable union and complement. Then there's this notion of sigma algebras "generated" from some source set $$S$$ — the intersection of all sigma algebras containing $$S$$, or in the finite case, the set obtained by repeatedly generating using union and complement from existing members.
 
 For example, the Borel sigma-algebra $$\mathcal{B}(\mathbb{R})$$ is the smallest sigma-algebra containing all open sets on the reals, and can also be generated with any of:
 
