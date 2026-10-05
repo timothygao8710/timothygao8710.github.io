@@ -7,7 +7,7 @@ tags: [math]
 
 # Positive measure forces long progressions
 
-Wanted to share a particularly beautiful analysis problem on my Math 202A practice midterm:
+Wanted to share a really cool problem I saw recently on my analysis midterm:
 
 > An arithmetic progression on $$\mathbb{R}$$ of length $$k$$ is a sequence of real numbers of the form $$a, a + h, \ldots, a + (k - 1)h$$ for some $$a, h \in \mathbb{R}$$ and $$h > 0$$. Show that any Lebesgue measurable subset of $$\mathbb{R}$$ of positive and finite Lebesgue measure contains arbitrarily long arithmetic progressions on $$\mathbb{R}$$.
 
