@@ -11,7 +11,7 @@ Wanted to share a really cool problem I saw recently on my analysis midterm:
 
 > An arithmetic progression on $$\mathbb{R}$$ of length $$k$$ is a sequence of real numbers of the form $$a, a + h, \ldots, a + (k - 1)h$$ for some $$a, h \in \mathbb{R}$$ and $$h > 0$$. Show that any Lebesgue measurable subset of $$\mathbb{R}$$ of positive and finite Lebesgue measure contains arbitrarily long arithmetic progressions on $$\mathbb{R}$$.
 
-# Solution Sketch
+# Solution 
 
 Being Lebesgue measurable is a statement about utility, let's convert to a statement about geometry / structure, which feels more useful. Let $$E$$ be our set and $$\lambda$$ denote Lebesgue measure. Using inner regularity[^regularity], for every $$\varepsilon > 0$$ we can find some compact $$K \subseteq E$$ such that $$\lambda(E) - \lambda(K) < \varepsilon$$, in particular one with $$\lambda(K) > 0$$. Since any compact set is also Lebesgue measurable[^compact], it is necessary and sufficient to consider compact subsets instead of Lebesgue measurable subsets.
 
