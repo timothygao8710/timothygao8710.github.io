@@ -72,7 +72,9 @@ $$
 
 We can let $$\lambda(U) < \frac{N}{N-1}\lambda(K)$$. Then, $$\lambda\big(\bigcap_{j=0}^{N-1} (K + jh)\big) > 0$$ so the intersection is non-empty, thus a length-$$N$$ arithmetic sequence exists. In fact, our construction not only guarantees existence of a single arithmetic sequence. For each of the uncountably many $$h \in \left(0, \frac{r}{N-1}\right)$$, there are uncountably many arithmetic sequences with this $$h$$[^uncountable]! It can also easily be extended to $$\mathbb{R}^n$$, other patterns of sequences, and infinite measure[^infinite].
 
-In summary, for any $$N$$, we can find a sufficiently tight $$U$$ so that $$N$$ sets each measuring $$\lambda(K)$$ must have non-empty intersection, then we can ensure all of them fit by choosing a sufficiently small $$h$$ based on $$N$$ and the safe distance between $$K$$ and $$U^c$$. This is essentially an extension of the construction in the proof of [Steinhaus's theorem](https://en.wikipedia.org/wiki/Steinhaus_theorem). Analysis is more than just rigor and formalism, there are actually some really cool and new ways of thinking that lie in wait!
+In summary, for any $$N$$, we can find a sufficiently tight $$U$$ so that $$N$$ sets each measuring $$\lambda(K)$$ must have non-empty intersection, then we can ensure all of them fit by choosing a sufficiently small $$h$$ based on $$N$$ and the safe distance between $$K$$ and $$U^c$$. This is essentially an extension of the construction in the proof of [Steinhaus's theorem](https://en.wikipedia.org/wiki/Steinhaus_theorem). 
+
+Analysis is more than just rigor and formalism, there are actually some really cool and new ways of thinking that lie in wait!
 
 
 [^regularity]: Outer regularity follows from the definition of the outer measure used to construct the Lebesgue measure: the infimum of $$\sum_i \lvert I_i \rvert$$ over all countable covers of the set by open intervals $$I_i$$. Then to get inner regularity, restrict to a sufficiently large bounded interval and apply outer regularity to the complement.
