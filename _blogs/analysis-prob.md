@@ -35,7 +35,7 @@ This motivates using outer regularity, which gives us a bounding open set $$U$$ 
 *Fig 2. Two uses of inner / outer regularity*
 {: .kv-cap}
 
-In order for any to fit, there must exist some $$d > 0$$ such that $$K$$ and $$K + d$$ both lie in $$U$$. We may proceed with the separation lemma (since $$K$$ is compact and $$U^c$$ is closed), which not only guarantees $$d$$ exists, but also that for all $$\lvert d' \rvert < d$$, $$K + d'$$ also lies in $$U$$[^separation]. But we haven't covered this theorem yet, and we can arrive at the same conclusion with a more elementary method.
+To fit the sets in $$U$$, there must exist some $$d > 0$$ such that $$K$$ and $$K + d$$ both lie in $$U$$. We may proceed with the separation lemma (since $$K$$ is compact and $$U^c$$ is closed), which not only guarantees $$d$$ exists, but also that for all $$\lvert d' \rvert < d$$, $$K + d'$$ also lies in $$U$$[^separation]. But we haven't covered this theorem yet, and we can arrive at the same conclusion with a more elementary method.
 
 Let $$B(x, r) = (x - r, x + r)$$ be the open ball centered at $$x$$ with radius $$r$$. Consider two different open covers of $$K$$:
 
