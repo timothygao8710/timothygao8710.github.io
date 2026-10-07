@@ -42,7 +42,7 @@ Let $$B(x, r) = (x - r, x + r)$$ be the open ball centered at $$x$$ with radius 
 1. $$B(x_i, r_i)$$ for all $$x_i \in K$$
 2. $$B(x_i, 2r_i)$$ for all $$x_i \in K$$
 
-where each $$r_i$$ is chosen so that $$B(x_i, 2r_i) \subseteq U$$ (and hence also $$B(x_i, r_i) \subseteq U$$). Note that such an $$r_i > 0$$ exists for every $$x_i$$ because $$U$$ is open.
+where each $$r_i$$ is chosen so that $$B(x_i, 2r_i) \subseteq U$$ (and $$B(x_i, r_i) \subseteq U$$). Note that such an $$r_i > 0$$ exists for every $$x_i$$ because $$U$$ is open.
 
 - Now, let's consider cover 1. From the definition of compactness, there must exist finitely many points $$x_{k_1}, x_{k_2}, \ldots, x_{k_n} \in K$$ such that $$\bigcup_{i=1}^{n} B(x_{k_i}, r_{k_i})$$ covers $$K$$[^indexing]. Then, since each open set in cover 2 is larger than the corresponding one in cover 1, we can use the balls centered at the same $$n$$ points as the finite cover for cover 2. Note that if we got our list of points from cover 2 and tried to use it on cover 1, it might not be sufficient.
 
