@@ -83,7 +83,7 @@ In summary, for any $$N$$, we can find a sufficiently tight $$U$$ so that $$N$$ 
 
 [^separation]: In particular, it states that if $$K$$ is compact, $$F$$ is closed, and $$K \cap F = \emptyset$$, then $$\operatorname{dist}(K, F) = \inf\{\lvert x - y \rvert : x \in K,\ y \in F\} > 0$$. We take $$F = U^c$$ and the conclusion follows.
 
-[^indexing]: Note here that we are not literally indexing points, since $$K$$ may be uncountable. It's just convenient notation to denote *some member*.
+[^indexing]: Note here that we are not literally indexing points $$k_i$$, since $$K$$ may be uncountable. It's just convenient notation to denote *some member*.
 
 [^translation]: Since Lebesgue measure is translation invariant, i.e. $$\lambda(K + x) = \lambda(K)$$, all $$N$$ sets have the same measure $$\lambda(K)$$.
 
