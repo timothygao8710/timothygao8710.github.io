@@ -87,7 +87,7 @@ In summary, for any $$N$$, we can find a sufficiently tight $$U$$ so that $$N$$ 
 
 [^translation]: Since Lebesgue measure is translation invariant, i.e. $$\lambda(K + x) = \lambda(K)$$, all $$N$$ sets have the same measure $$\lambda(K)$$.
 
-[^direct]: We can also avoid induction. Alternatively, let $$A_j = K + jh \subseteq U$$ for $$j = 0, \ldots, N-1$$. By De Morgan's law (with complements taken in $$U$$), $$U \setminus \bigcap_j A_j = \bigcup_j (U \setminus A_j)$$, so by subadditivity and translation invariance, $$\lambda\big(U \setminus \bigcap_j A_j\big) \le \sum_{j=0}^{N-1} \lambda(U \setminus A_j) = N\big(\lambda(U) - \lambda(K)\big)$$. Since $$\lambda(U)$$ is finite, $$\lambda\big(\bigcap_j A_j\big) = \lambda(U) - \lambda\big(U \setminus \bigcap_j A_j\big) \ge N\lambda(K) - (N-1)\lambda(U)$$.
+[^direct]: We can also avoid induction. Alternatively, let $$A_j = K + jh \subseteq U$$ for $$j = 0, \ldots, N-1$$. By De Morgan's law, $$U \setminus \bigcap_j A_j = \bigcup_j (U \setminus A_j)$$, so by subadditivity and translation invariance, $$\lambda\big(U \setminus \bigcap_j A_j\big) \le \sum_{j=0}^{N-1} \lambda(U \setminus A_j) = N\big(\lambda(U) - \lambda(K)\big)$$. Since $$\lambda(U)$$ is finite, $$\lambda\big(\bigcap_j A_j\big) = \lambda(U) - \lambda\big(U \setminus \bigcap_j A_j\big) \ge N\lambda(K) - (N-1)\lambda(U)$$.
 
 [^uncountable]: Since countable sets have Lebesgue measure zero
 
