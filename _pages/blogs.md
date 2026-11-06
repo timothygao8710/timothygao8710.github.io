@@ -46,7 +46,7 @@ permalink: /blogs/
           <a class="notes-card__link" href="{{ note.url | relative_url }}" aria-label="Open blog: {{ note.title | strip | escape }}"></a>
         {% endif %}
         <div class="notes-card__inner">
-          <h2 class="notes-card__title">{{ note.title }}</h2>
+          <h2 class="notes-card__title">{{ note.title }}{% if note.starred %} (★){% endif %}</h2>
           {% assign blurb = note.description | default: note.excerpt %}
           {% if blurb %}
             <p class="notes-card__desc">{{ blurb | strip_html | truncate: 200 }}</p>

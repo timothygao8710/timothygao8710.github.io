@@ -4,6 +4,7 @@ date: 2026-07-27
 external_url: https://mlberkeley.substack.com/p/the-annotated-diffusiongemma
 description: "An annotated, from-scratch reimplementation of DiffusionGemma"
 tags: [llm, diffusion]
+starred: true
 ---
 
 - X Post: [X Thread](https://x.com/timg8710/status/2086900707442188606)
