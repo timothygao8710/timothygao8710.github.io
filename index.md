@@ -63,9 +63,11 @@ permalink: /
 
 <br/>
 
-Hi! I'm a 4th year undergrad at [UC Berkeley](https://www.berkeley.edu) studying Electrical Engineering and Computer Science (EECS). I'm very interested in studying learned mechanisms in LLM's internal computation, and how this could inform us to make them more aligned, efficient, or capable. In the past, I've worked on disaggregated serving with the TensorRT-LLM team at Nvidia, robotics research under Sergey Levine, and kernels to bring up models at [Etched](https://x.com/Etched). I also competed at the ICPC representing Berkeley, and [used](https://github.com/timothygao8710/Problem-Setting/blob/main/Pancakes-II/pancakes-II-editorial.pdf) [to](https://github.com/timothygao8710/Problem-Setting/blob/main/Highways/Highways_Editorial.pdf) [write](https://github.com/timothygao8710/Problem-Setting/blob/main/Rating/rating-editorial.pdf) competitive programming problems in high school. I was D. E. Shaw Nexus Fellow, won the AI grand prize at Calhacks and Treehacks, and helped TA CS 189 at Berkeley. Outside of work, I enjoying playing soccer, [fingerstyle guitar](https://youtube.com/@timothygao9442), and karaoke.
+Hi! I'm a 4th-year undergrad at UC Berkeley studying EECS. In the past, I've published under Sergey Levine in RAIL, worked on LLM inference on the TensorRT-LLM team at Nvidia, and wrote kernels to bring up models at Etched. I've also worked on ViTs under Trevor Darrell for an NGA contract project, and on RLVR for LLM confidence calibration under Bin Yu.
 
-Feel free to reach out at [timothygao at berkeley dot edu]!
+I competed at the International Collegiate Programming Contest (ICPC) representing Berkeley twice, reached Master on Codeforces, and [used](https://github.com/timothygao8710/Problem-Setting/blob/main/Pancakes-II/pancakes-II-editorial.pdf) [to](https://github.com/timothygao8710/Problem-Setting/blob/main/Highways/Highways_Editorial.pdf) [set](https://github.com/timothygao8710/Problem-Setting/blob/main/Rating/rating-editorial.pdf) problems in high school. I was a D. E. Shaw Nexus Fellow, won AI grand prizes at CalHacks and TreeHacks, and TA'd CS 189. Outside of work, I enjoy playing soccer, [fingerstyle guitar](https://youtube.com/@timothygao9442), and hanging out with friends at ML@B.
+
+If you'd like to chat, please reach out at timothygao at berkeley dot edu.
 
 <!-- If you like RLVR, you might like [Reasoning about Confidence](https://docs.google.com/presentation/d/1AhArRbct_EcK9Hzf-3rEhBKRjr38Qx4NyfMpVKNG9eY) and [Generalizing Temperature](https://timothygao8710.github.io/blogs/beyond-temperature/). 
 
