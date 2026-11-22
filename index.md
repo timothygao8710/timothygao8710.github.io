@@ -65,7 +65,7 @@ permalink: /
 
 Hi! I'm a 4th-year undergrad at UC Berkeley studying EECS. In the past, I've published under Sergey Levine in RAIL, worked on LLM inference on the TensorRT-LLM team at Nvidia, and wrote kernels to bring up models at Etched. I've also worked on ViTs under Trevor Darrell for an NGA contract project, and on RLVR for LLM confidence calibration under Bin Yu.
 
-I competed at the International Collegiate Programming Contest (ICPC) representing Berkeley twice, reached Master on Codeforces, and [used](https://github.com/timothygao8710/Problem-Setting/blob/main/Pancakes-II/pancakes-II-editorial.pdf) [to](https://github.com/timothygao8710/Problem-Setting/blob/main/Highways/Highways_Editorial.pdf) [set](https://github.com/timothygao8710/Problem-Setting/blob/main/Rating/rating-editorial.pdf) problems in high school. I was a D. E. Shaw Nexus Fellow, won AI grand prizes at CalHacks and TreeHacks, and TA'd CS 189. Outside of work, I enjoy playing soccer, [fingerstyle guitar](https://youtube.com/@timothygao9442), and hanging out with friends at ML@B.
+I competed at the International Collegiate Programming Contest (ICPC) representing Berkeley twice, reached Master on Codeforces, and used to [set](https://github.com/timothygao8710/Problem-Setting) problems and [write](https://usaco.guide/problems/usaco-838-milking-order/solution) [editorials](https://usaco.guide/problems/cses-1139-distinct-colors/solution) in high school. I was a D. E. Shaw Nexus Fellow, won AI grand prizes at CalHacks and TreeHacks, and TA'd CS 189. Outside of work, I enjoy playing soccer, [fingerstyle guitar](https://youtube.com/@timothygao9442), and hanging out with friends at ML@B.
 
 If you'd like to chat, please reach out at timothygao at berkeley dot edu.
 
@@ -75,7 +75,7 @@ If you like mechanistic interpretability, you might like [QK Visualizer](https:/
 
 If you like diffusionLLMs, you might like [The Annotated DiffusionGemma](https://colab.research.google.com/drive/17egFGmboDkhU6duNQHvjB1J0oiKslOMl?usp=sharing).
 
-If you like competitive programming, you can check out [some](https://github.com/timothygao8710/Problem-Setting/blob/main/Pancakes-II/pancakes-II-editorial.pdf) [problems](https://github.com/timothygao8710/Problem-Setting/blob/main/Highways/Highways_Editorial.pdf) [I've](https://github.com/timothygao8710/Problem-Setting/blob/main/Rating/rating-editorial.pdf) written in the past. -->
+If you like competitive programming, you can check out [some](https://github.com/timothygao8710/Problem-Setting/blob/main/Pancakes-II/pancakes-II-en-statement.pdf) [problems](https://github.com/timothygao8710/Problem-Setting/blob/main/Highways/highways-r13-en.pdf) [I've](https://github.com/timothygao8710/Problem-Setting/blob/main/Rating/rating-en-statement.pdf) written in the past. -->
 
 
 ---
